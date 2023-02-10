@@ -4,7 +4,8 @@ import Logo from '../assets/images/shareable-logo.png'
 
 const InsightData: InsightDataInterface[] = [
     {
-        title: 'DATASCI-2864: Title blah blah blah',
+        ticketId: 'DATASCI-2864:',
+        title: 'Title blah blah blah',
         date: '10/2/2011',
         imgs: [{src: Logo, alt: 'google image'}],
         outcomeNumber: 21,
@@ -14,7 +15,8 @@ const InsightData: InsightDataInterface[] = [
         takeaways: 'string string string string string string string string'
     },
     {
-        title: 'DATASCI-2202: Title blah blah blah',
+        ticketId: 'DATASCI-2202:',
+        title: 'Title blah blah blah',
         date: '8/3/2010',
         imgs: [{src: Logo, alt: 'google image'}],
         outcomeNumber: 1,
