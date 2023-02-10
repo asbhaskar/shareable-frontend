@@ -9,7 +9,7 @@ export default defineConfig({
     plugins: [react()],
     resolve: {
         alias: {
-			'@pages': path.resolve(__dirname, 'src/Pages'),
+			'@pages': path.resolve(__dirname, 'src/pages'),
 			'@components': path.resolve(__dirname, 'src/components'),
 			'@layout': path.resolve(__dirname, 'src/layout'),
 			'@assets': path.resolve(__dirname, 'src/assets'),
