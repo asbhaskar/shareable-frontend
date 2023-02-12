@@ -12,7 +12,7 @@ export const signUp = (userEmailCredentials: UserEmailCredentials) => {
     const {email, password} = userEmailCredentials;
     createUserWithEmailAndPassword(auth, email, password)
         .then((firebaseUserCredential: UserCredential) => {
-            const userId: String = firebaseUserCredential.user.uid;
+            const userId: string = firebaseUserCredential.user.uid;
             setDoc(doc(firestore, USERS_COLLECTION, userId), {
                organizationId: [TEST_ORGANIZATION],
                groupsIds: [TEST_GROUP]
