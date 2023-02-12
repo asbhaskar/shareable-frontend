@@ -20,15 +20,6 @@ export interface FiledRequest {
     insights? : Insight[]
 }
 
-enum RequestPriority {
-    Low,
-    Medium,
-    High
-}
+type RequestPriority = "Low" | "Medium" | "High"
 
-enum RequestStatus {
-    Unassigned,
-    Assigned,
-    Blocked,
-    Completed
-}
+type RequestStatus = "Unassigned" | "Assigned" | "Blocked" | "Completed"
