@@ -1,10 +1,11 @@
 import { firebaseApp, firestore } from '../firebase'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import {TEST_ORGANIZATION} from "../interfaces/organization";
-import {TEST_GROUP} from "../interfaces/group";
+import {TEST_ORGANIZATION} from "../../interfaces/organization";
+import {TEST_GROUP} from "../../interfaces/group";
 import {UserCredential} from "@firebase/auth";
-import {UserEmailCredentials, USERS_COLLECTION} from "../interfaces/user";
+import {UserEmailCredentials, USERS_COLLECTION} from "../../interfaces/user";
+import { useState, useEffect, SetStateAction } from 'react';
 
 const auth = getAuth(firebaseApp);
 
@@ -61,3 +62,12 @@ export const signOut = () => {
         console.log("Signed out")
     });
 }
+
+const useUserState = () => {
+    const [user, setUser] = useState(null);
+    useEffect(
+        () => onAuthStateChanged(auth, (response: any) => setUser(response)),
+        []
+    );
+    return user;
+};
