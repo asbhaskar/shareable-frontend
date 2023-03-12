@@ -28,18 +28,17 @@ export const signUp = (userEmailCredentials: UserEmailCredentials) => {
         });
 }
 
-export const signIn = (userEmailCredentials: UserEmailCredentials) => {
+export const signIn = async (userEmailCredentials: UserEmailCredentials) => {
     const {email, password} = userEmailCredentials;
-    signInWithEmailAndPassword(auth, email, password)
+    let response: any
+    await signInWithEmailAndPassword(auth, email, password)
         .then((firebaseUserCredential: UserCredential) => {
-            // Signed in
-            const user = firebaseUserCredential.user;
-            // ...
+            response = firebaseUserCredential
         })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
+            response = error
         });
+    return response;
 }
 
 export const signInWithGoogle = () => {
