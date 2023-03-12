@@ -2,14 +2,13 @@ import { Box } from '@mui/system'
 import React, { useEffect } from 'react'
 import Navbar from '../components/Navbar/Navbar'
 import Sidebar from '../components/Sidebar/Sidebar'
-import { useLocation } from "react-router-dom";
+import { useLocation } from 'react-router-dom'
 
 interface LayoutInterface {
     children: any
 }
 
 const Layout = ({ children }: LayoutInterface) => {
-
     const { pathname } = useLocation()
     useEffect(() => {
         console.log(location)
@@ -17,18 +16,17 @@ const Layout = ({ children }: LayoutInterface) => {
 
     return (
         <Box>
-            {pathname !== "/sign-in" ?
+            {pathname !== '/sign-in' ? (
                 <>
                     <Navbar />
                     <Box sx={{ display: 'flex' }}>
                         <Sidebar />
                         {children}
                     </Box>
-                </> :
-                <Box sx={{ display: 'flex' }}>
-                    {children}
-                </Box>
-            }
+                </>
+            ) : (
+                <Box sx={{ display: 'flex' }}>{children}</Box>
+            )}
         </Box>
     )
 }

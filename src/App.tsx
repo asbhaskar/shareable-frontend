@@ -7,21 +7,20 @@ import Dashboard from './pages/Dashboard'
 import routes from './routes'
 
 const App = () => {
-
     return (
-		<>
-			{/* TODO: get rid of hashrouter */}
-			<Router>
-				<Layout>
-					{/* <p>TEST</p> */}
-					<Routes>
-						{routes.map(({ path, element }) => (
-							<Route key={path} path={path} element={element}></Route>
-						))}
-					</Routes>
-				</Layout>
-			</Router>
-		</>
+        <>
+            {/* TODO: get rid of hashrouter */}
+            <Router>
+                <Layout>
+                    {/* <p>TEST</p> */}
+                    <Routes>
+                        {routes.map(({ path, element }) => (
+                            <Route key={path} path={path} element={element}></Route>
+                        ))}
+                    </Routes>
+                </Layout>
+            </Router>
+        </>
     )
 }
 

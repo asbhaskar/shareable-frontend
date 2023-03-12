@@ -1,9 +1,9 @@
-import { Box, Button, CircularProgress, TextField } from "@mui/material"
+import { Box, Button, CircularProgress, TextField } from '@mui/material'
 import styles from './style'
-import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik'
+import { useNavigate } from 'react-router-dom'
 const SignInForm = () => {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     const {
         handleChange,
         handleSubmit,
@@ -22,8 +22,8 @@ const SignInForm = () => {
             //     navigate('/dashboard');
             // }
         },
-    });
-    return  (
+    })
+    return (
         <Box sx={styles.signIn__container}>
             {isSubmitting ? (
                 <Box sx={styles.loading}>
@@ -51,8 +51,10 @@ const SignInForm = () => {
                         sx={styles.form__input}
                     />
                     {/* <Form.Group className="mb-3"> */}
-                        {/* {error && <Alert variant="danger">{error}</Alert>} */}
-                        <Button type="submit" sx={styles.form__submit}>Sign In</Button>
+                    {/* {error && <Alert variant="danger">{error}</Alert>} */}
+                    <Button type="submit" sx={styles.form__submit}>
+                        Sign In
+                    </Button>
                     {/* </Form.Group> */}
                 </Box>
             )}
@@ -60,4 +62,3 @@ const SignInForm = () => {
     )
 }
 export default SignInForm
-
