@@ -1,10 +1,11 @@
 import { firebaseApp, firestore } from '../firebase'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import {TEST_ORGANIZATION} from "../interfaces/organization";
-import {TEST_GROUP} from "../interfaces/group";
+import {TEST_ORGANIZATION} from "../../interfaces/organization";
+import {TEST_GROUP} from "../../interfaces/group";
 import {UserCredential} from "@firebase/auth";
-import {UserEmailCredentials, USERS_COLLECTION} from "../interfaces/user";
+import {UserEmailCredentials, USERS_COLLECTION} from "../../interfaces/user";
+import { useState, useEffect, SetStateAction } from 'react';
 
 const auth = getAuth(firebaseApp);
 
@@ -27,18 +28,17 @@ export const signUp = (userEmailCredentials: UserEmailCredentials) => {
         });
 }
 
-export const signIn = (userEmailCredentials: UserEmailCredentials) => {
+export const signIn = async (userEmailCredentials: UserEmailCredentials) => {
     const {email, password} = userEmailCredentials;
-    signInWithEmailAndPassword(auth, email, password)
+    let response: any
+    await signInWithEmailAndPassword(auth, email, password)
         .then((firebaseUserCredential: UserCredential) => {
-            // Signed in
-            const user = firebaseUserCredential.user;
-            // ...
+            response = firebaseUserCredential
         })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
+            response = error
         });
+    return response;
 }
 
 export const signInWithGoogle = () => {
@@ -61,3 +61,12 @@ export const signOut = () => {
         console.log("Signed out")
     });
 }
+
+const useUserState = () => {
+    const [user, setUser] = useState(null);
+    useEffect(
+        () => onAuthStateChanged(auth, (response: any) => setUser(response)),
+        []
+    );
+    return user;
+};
