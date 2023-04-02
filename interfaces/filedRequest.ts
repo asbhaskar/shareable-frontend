@@ -5,10 +5,11 @@ import {Group} from "./group";
 export const REQUESTS_COLLECTION = "requests"
 
 export interface FiledRequest {
-    createdBy: User;
+    createdBy: string;
     createDate: number;
+    lastUpdated: number;
     title: string;
-    assignee: User | Group;
+    assignee: string; // userId || groupId
     priority: RequestPriority;
     status: RequestStatus;
     deadline: number;
@@ -17,7 +18,7 @@ export interface FiledRequest {
     project?: string; // TODO Add project type
     description?: string;
     comments?: string[];
-    insights? : Insight[]
+    insights? : string[] // insightIds
 }
 
 type RequestPriority = "Low" | "Medium" | "High"
