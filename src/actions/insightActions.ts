@@ -2,9 +2,9 @@ import {firebaseStorage, firestore} from '../firebase'
 import {v4 as uuidv4} from 'uuid';
 import {doc, setDoc, getDoc, deleteDoc} from "firebase/firestore";
 import {uploadBytes, ref, getDownloadURL} from "firebase/storage";
-import {ORGANIZATIONS_COLLECTION} from "../interfaces/organization";
-import {GROUPS_COLLECTION} from "../interfaces/group";
-import {Insight, INSIGHTS_COLLECTION} from "../interfaces/insight";
+import {ORGANIZATIONS_COLLECTION} from "../../interfaces/organization";
+import {GROUPS_COLLECTION} from "../../interfaces/group";
+import {Insight, INSIGHTS_COLLECTION} from "../../interfaces/insight";
 import {UploadMetadata} from "@firebase/storage";
 
 export const addInsight = (organization: string, group: string, insight: Insight) => {

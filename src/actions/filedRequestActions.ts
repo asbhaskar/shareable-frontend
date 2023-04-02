@@ -1,5 +1,5 @@
 import { firestore } from '../firebase'
-import {FiledRequest, REQUESTS_COLLECTION} from "../interfaces/filedRequest";
+import {FiledRequest, REQUESTS_COLLECTION} from "../../interfaces/filedRequest";
 import {v4 as uuidv4} from 'uuid';
 import {
     doc,
@@ -13,8 +13,8 @@ import {
     startAfter,
     getDoc
 } from "firebase/firestore";
-import {ORGANIZATIONS_COLLECTION} from "../interfaces/organization";
-import {GROUPS_COLLECTION} from "../interfaces/group";
+import {ORGANIZATIONS_COLLECTION} from "../../interfaces/organization";
+import {GROUPS_COLLECTION} from "../../interfaces/group";
 import {CollectionReference, Query} from "@firebase/firestore";
 
 const QUERY_LIMIT: number = 100
