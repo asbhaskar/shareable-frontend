@@ -10,7 +10,7 @@ import {UploadMetadata} from "@firebase/storage";
 export const addInsight = (organization: string, group: string, insight: Insight) => {
     const uuid = uuidv4()
 
-    setDoc(doc(firestore, `${ORGANIZATIONS_COLLECTION}/${organization}/${GROUPS_COLLECTION}/${group}/${INSIGHTS_COLLECTION}`, uuid), {insight})
+    setDoc(doc(firestore, `${ORGANIZATIONS_COLLECTION}/${organization}/${GROUPS_COLLECTION}/${group}/${INSIGHTS_COLLECTION}`, uuid), insight)
         .catch((error) => {
             console.log("Error - FireStore - Adding Insight: ", error);
         });

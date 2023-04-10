@@ -1,10 +1,8 @@
-import {Group} from "./group";
-
 export const ORGANIZATIONS_COLLECTION = "organizations"
 export const TEST_ORGANIZATION = "TEST_ORGANIZATION"
 
 export interface Organization {
-    Groups: Group[]
-
+    organizationName: string
+    executives: string[] // userIds
     // Other misc org data
 }
