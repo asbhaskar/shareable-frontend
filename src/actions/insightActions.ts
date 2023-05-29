@@ -26,7 +26,7 @@ export const addInsight = async (organization: string, group: string, insight: I
     try {
         await setDoc(doc(firestore, `${ORGANIZATIONS_COLLECTION}/${organization}/${GROUPS_COLLECTION}/${group}/${INSIGHTS_COLLECTION}`, insightId), insight)
         return insightId;
-    } catch (error) {
+    } catch (error: unknown) {
         console.log("Error - FireStore - Adding Insight: ", error);
         throw error;
     }
@@ -34,7 +34,7 @@ export const addInsight = async (organization: string, group: string, insight: I
 
 export const updateInsight = (organization: string, group: string, insightId: string, insight: Insight) => {
     setDoc(doc(firestore, `${ORGANIZATIONS_COLLECTION}/${organization}/${GROUPS_COLLECTION}/${group}/${INSIGHTS_COLLECTION}`, insightId), insight)
-        .catch((error) => {
+        .catch((error: unknown) => {
             console.log("Error - FireStore - Updating Insight: ", error);
         });
 }
@@ -48,7 +48,7 @@ export const getInsight = async (organization: string, group: string, insightId:
         } else {
             console.log("Error - FireStore - Getting Insight: No insight found for id: " + insightId)
         }
-    } catch (error) {
+    } catch (error: unknown) {
         console.log("Error - FireStore - Getting Insight: ", error);
         throw error
     }
@@ -57,7 +57,7 @@ export const getInsight = async (organization: string, group: string, insightId:
 export const deleteInsight = async (organization: string, group: string, insightId: string) => {
     try {
         await deleteDoc(doc(firestore, `${ORGANIZATIONS_COLLECTION}/${organization}/${GROUPS_COLLECTION}/${group}/${INSIGHTS_COLLECTION}`, insightId));
-    } catch (error) {
+    } catch (error: unknown) {
         console.log("Error - FireStore - Deleting Insight: ", error);
         throw error;
     }
@@ -75,11 +75,11 @@ export const storeInsightMedia = (imageFile: File): string | null => {
                 .then((downloadURL: string) => {
                     return downloadURL
                 })
-                .catch((error) => {
+                .catch((error: unknown) => {
                     console.log("Error - FirebaseStorage - Getting Insight file URLs", error);
                 });
             })
-        .catch((error) => {
+        .catch((error: unknown) => {
             console.log("Error - FirebaseStorage - Upload Insight files", error);
         });
     return null;
@@ -97,7 +97,7 @@ export const getInsights = async (organization: string, group: string): Promise<
             insights[insightDocument.id] = insightDocument.data() as Insight;
         });
         return insights;
-    } catch (error) {
+    } catch (error: unknown) {
         console.log("Error - FireStore - Querying Insights: ", error);
         throw error
     }

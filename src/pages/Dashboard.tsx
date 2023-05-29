@@ -6,83 +6,27 @@ import {TEST_GROUP} from "@interfaces/group";
 import {Insight} from "@interfaces/insight";
 import {useEffect, useState} from "react";
 import {Box, Button} from "@mui/material";
-import {addFiledRequest, getFiledRequests} from "../actions/filedRequestActions";
+import {addFiledRequest, deleteFiledRequest, getFiledRequests} from "../actions/filedRequestActions";
 import {FiledRequest} from "@interfaces/filedRequest";
-
-const demoInsights: {[id: string]: Insight} = {
-    "insightId1": {
-        createdBy: 'userId',
-        ticketId: 'DATASCI-2864:',
-        title: 'DEMO - Title blah blah blah',
-        createDate: 1,
-        lastUpdated: 2,
-        imgs: [{src: Logo, alt: 'google image'}],
-        outcomeNumber: 21,
-        keyStat: '21% increase per annum',
-        keyNumber: '21%',
-        tldr: 'string string string string string string string string string ',
-        takeaways: 'string string string string string string string string',
-        requests: ['RequestId1'],
-        collaborators: ['UserId1']
-    },
-    "insightId2": {
-        createdBy: 'userId2',
-        ticketId: 'DATASCI-2202:',
-        title: 'DEMO - Title blah blah blah',
-        createDate: 3,
-        lastUpdated: 4,
-        imgs: [{src: Logo, alt: 'google image'}],
-        outcomeNumber: 25,
-        keyStat: '25% increase per annum',
-        keyNumber: '25%',
-        tldr: 'string string string string string string string string string ',
-        takeaways: 'string string string string string string string string',
-        requests: ['RequestId2'],
-        collaborators: ['UserId2']
-    }
-}
-
-const demoRequests: {[id: string]: FiledRequest} = {
-    "requestId1": {
-        createdBy: "BigBossId",
-        createDate: 123,
-        lastUpdated: 123,
-        title: "DEMO - Title blah blah blah",
-        assignee: "CodeMonkeyId",
-        priority: "High",
-        status: "Assigned",
-        deadline: 123
-    },
-    "requestId2": {
-        createdBy: "BigBossId",
-        createDate: 123,
-        lastUpdated: 123,
-        title: "DEMO - Title blah blah blah",
-        assignee: "CodeMonkeyId",
-        priority: "High",
-        status: "Assigned",
-        deadline: 123
-    }
-}
+import {DEMO_REQUESTS} from "../databases/filedRequests";
+import {DEMO_INSIGHTS} from "../databases/insights";
 
 const Dashboard = () => {
-    const [displayedRequests, setDisplayedRequests] = useState<{[id: string]: FiledRequest}>(demoRequests);
-    const [displayedInsights, setDisplayedInsights] = useState<{[id: string]: Insight}>(demoInsights);
+    const [displayedRequests, setDisplayedRequests] = useState<{[id: string]: FiledRequest}>(DEMO_REQUESTS);
+    const [displayedInsights, setDisplayedInsights] = useState<{[id: string]: Insight}>(DEMO_INSIGHTS);
 
     useEffect(() => {
         (async () => {
             try {
                 const storedRequests = await getFiledRequests(TEST_ORGANIZATION, TEST_GROUP);
-                // TODO: Refactor, current state is a bit hacky to force React to update
                 setDisplayedRequests({...displayedRequests, ...storedRequests});
-            } catch (error) {
+            } catch (error: unknown) {
                 console.log("Fetching requests broken very sad")
             }
             try {
                 const storedInsights = await getInsights(TEST_ORGANIZATION, TEST_GROUP);
-                // TODO: Refactor, current state is a bit hacky to force React to update
                 setDisplayedInsights({...displayedInsights, ...storedInsights});
-            } catch (error) {
+            } catch (error: unknown) {
                 console.log("Fetching insights broken very sad")
             }
         })();
@@ -101,15 +45,15 @@ const Dashboard = () => {
             keyStat: '21% increase per annum',
             keyNumber: '21%',
             tldr: 'string string string string string string string string string',
-            takeaways: 'string string string string string string string string',
+            takeaway: 'string string string string string string string string',
             requests: ['RequestId1'],
             collaborators: ['UserId1']
         };
         try {
             const insightId: string = await addInsight(TEST_ORGANIZATION, TEST_GROUP, hardcodedInsight);
-            displayedInsights[insightId] = hardcodedInsight;
-            setDisplayedInsights({...displayedInsights});
-        } catch (error) {
+            const newInsightEntry: {[id: string]: Insight} = {[insightId]: hardcodedInsight}
+            setDisplayedInsights({...displayedInsights, ...newInsightEntry});
+        } catch (error: unknown) {
             // Replace with user visible messaging
             console.log("Could not create new insight");
         }
@@ -129,34 +73,34 @@ const Dashboard = () => {
         };
         try {
             const filedRequestId: string = await addFiledRequest(TEST_ORGANIZATION, TEST_GROUP, hardcodedFiledRequest);
-            displayedRequests[filedRequestId] = hardcodedFiledRequest;
-            // TODO: Refactor, current state is a bit hacky to force React to update
-            setDisplayedRequests({...displayedRequests});
-        } catch (error) {
+            const newRequestEntry: {[id: string]: FiledRequest} = {[filedRequestId]: hardcodedFiledRequest}
+            setDisplayedRequests({...displayedRequests, ...newRequestEntry});
+        } catch (error: unknown) {
             // Replace with user visible messaging
             console.log("Could not create new request");
         }
     }
 
-    const generateDeleteFiledRequestHandler = (filedRequestId: string): Function => {
+    const generateDeleteFiledRequestHandler = (filedRequestId: string): (() => void) => {
         return async () => {
             try {
-                await deleteInsight(TEST_ORGANIZATION, TEST_GROUP, filedRequestId);
-                delete displayedRequests[filedRequestId];
-                // TODO: Refactor, current state is a bit hacky to force React to update
-                setDisplayedRequests({...displayedRequests});
+                await deleteFiledRequest(TEST_ORGANIZATION, TEST_GROUP, filedRequestId);
+                const requestsCopy: {[id: string]: FiledRequest} = {...displayedRequests};
+                delete requestsCopy[filedRequestId];
+                setDisplayedRequests(requestsCopy);
             } catch {
                 console.log("Could not delete filed request");
             }
         }
     };
 
-    const generateDeleteInsightHandler = (insightId: string): Function => {
+    const generateDeleteInsightHandler = (insightId: string): (() => void) => {
         return async () => {
             try {
                 await deleteInsight(TEST_ORGANIZATION, TEST_GROUP, insightId);
-                delete displayedInsights[insightId];
-                setDisplayedInsights({...displayedInsights});
+                const insightsCopy: {[insightId: string]: Insight} = {...displayedInsights};
+                delete insightsCopy[insightId];
+                setDisplayedInsights(insightsCopy);
             } catch {
                 console.log("Could not delete insight");
             }
@@ -172,10 +116,10 @@ const Dashboard = () => {
             marginTop:'100px'
         }}>
             {/**TODO: Current button placement is very cursed, need to adjust**/}
-            <Button onClick={async () => {await createNewFiledRequest();}}>
+            <Button onClick={createNewFiledRequest}>
                 New Request
             </Button>
-            <Button onClick={async () => {await createNewInsight();}}>
+            <Button onClick={createNewInsight}>
                 New Insight
             </Button>
             <TicketFeedContainer filedRequestData={displayedRequests}

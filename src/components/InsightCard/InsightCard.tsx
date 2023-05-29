@@ -5,7 +5,7 @@ import {Insight} from "@interfaces/insight";
 
 interface InsightCard {
     insightCardData: Insight,
-    onDelete: Function
+    onDelete: () => void
 }
 
 function InsightCard({
@@ -20,7 +20,7 @@ function InsightCard({
         keyStat, 
         keyNumber, 
         tldr, 
-        takeaways
+        takeaway
     } = insightCardData
 
     return (
@@ -46,7 +46,7 @@ function InsightCard({
                         {tldr}
                     </Box>
                     <Box>
-                        {takeaways}
+                        {takeaway}
                     </Box>
                 </Box>
                 {/* TODO: Make img array into separate component w support for multiple imgs */}
@@ -67,7 +67,7 @@ function InsightCard({
                 </Button>
                 {/* Exclude delete button for hardcoded demo insights */}
                 {!title.includes("DEMO") &&
-                <Button  onClick={async () => {await onDelete();} }>
+                <Button onClick={onDelete}>
                     Delete
                 </Button>}
             </Box>

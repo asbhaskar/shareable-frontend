@@ -1,5 +1,5 @@
 import { firestore } from '../firebase'
-import {FiledRequest, REQUESTS_COLLECTION} from "../../interfaces/filedRequest";
+import {FiledRequest, REQUESTS_COLLECTION} from "@interfaces/filedRequest";
 import {v4 as uuidv4} from 'uuid';
 import {
     doc,
@@ -10,12 +10,14 @@ import {
     orderBy,
     limit,
     collection,
-    startAfter,
     getDoc
 } from "firebase/firestore";
 import {ORGANIZATIONS_COLLECTION} from "@interfaces/organization";
 import {GROUPS_COLLECTION} from "@interfaces/group";
 import {CollectionReference, Query} from "@firebase/firestore";
+import firebase from "firebase/compat";
+import QuerySnapshot = firebase.firestore.QuerySnapshot;
+import DocumentData = firebase.firestore.DocumentData;
 
 const QUERY_LIMIT: number = 100
 
@@ -25,7 +27,7 @@ export const addFiledRequest = async (organization: string, group: string, filed
     try {
         await setDoc(doc(firestore, `${ORGANIZATIONS_COLLECTION}/${organization}/${GROUPS_COLLECTION}/${group}/${REQUESTS_COLLECTION}`, filedRequestId), filedRequest)
         return filedRequestId;
-    } catch (error) {
+    } catch (error: unknown) {
         console.log("Error - FireStore - Adding FiledRequest: ", error);
         throw error;
     }
@@ -33,7 +35,7 @@ export const addFiledRequest = async (organization: string, group: string, filed
 
 export const updateFiledRequest = (organization: string, group: string, filedRequestId: string, filedRequest: FiledRequest) => {
     setDoc(doc(firestore, `${ORGANIZATIONS_COLLECTION}/${organization}/${GROUPS_COLLECTION}/${group}/${REQUESTS_COLLECTION}`, filedRequestId), filedRequest)
-        .catch((error) => {
+        .catch((error: unknown) => {
             console.log("Error - FireStore - Updating FiledRequest: ", error);
         });
 }
@@ -47,7 +49,7 @@ export const getFiledRequest = async (organization: string, group: string, filed
         } else {
             console.log("Error - FireStore - Getting FiledRequest: No filed request found for id: " + filedRequestId)
         }
-    } catch (error) {
+    } catch (error: unknown) {
         console.log("Error - FireStore - Getting FiledRequest: ", error);
         throw error
     }
@@ -56,7 +58,7 @@ export const getFiledRequest = async (organization: string, group: string, filed
 export const deleteFiledRequest = async (organization: string, group: string, filedRequestId: string) => {
     try {
         await deleteDoc(doc(firestore, `${ORGANIZATIONS_COLLECTION}/${organization}/${GROUPS_COLLECTION}/${group}/${REQUESTS_COLLECTION}`, filedRequestId));
-    } catch (error) {
+    } catch (error: unknown) {
         console.log("Error - FireStore - Deleting FiledRequest: ", error);
         throw error;
     }
@@ -71,11 +73,12 @@ export const getFiledRequests = async (organization: string, group: string): Pro
 
     const filedRequests: {[id: string]: FiledRequest} = {};
     try {
-        (await getDocs(queryRequest)).forEach((documentSnapshot) => {
+        const queryDocs = await getDocs(queryRequest);
+        queryDocs.forEach((documentSnapshot) => {
             filedRequests[documentSnapshot.id] = documentSnapshot.data() as FiledRequest;
         });
         return filedRequests;
-    } catch (error) {
+    } catch (error: unknown) {
         console.log("Error - FireStore - Querying FiledRequests: ", error);
         throw error
     }

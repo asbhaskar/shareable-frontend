@@ -5,7 +5,7 @@ import {FiledRequest} from "@interfaces/filedRequest";
 // Just copied over from InsightCard as first draft, field layout will be adjusted
 interface FiledRequestCard {
     filedRequestCardData: FiledRequest,
-    onDelete: Function
+    onDelete: () => void
 }
 
 function FiledRequestCard({
@@ -70,7 +70,7 @@ function FiledRequestCard({
                 </Button>
                 {/* Exclude delete button for hardcoded demo insights */}
                 {!title.includes("DEMO") &&
-                    <Button  onClick={async () => {await onDelete();} }>
+                    <Button onClick={onDelete}>
                         Delete
                     </Button>}
             </Box>

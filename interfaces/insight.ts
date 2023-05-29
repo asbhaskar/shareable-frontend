@@ -14,7 +14,7 @@ export interface Insight {
     tldr: string,
     requests: string[]; // filedRequestIds
     collaborators: string[] // userIds/groupsIds;
-    takeaways?: string;
+    takeaway?: string;
     repositoryUrl?: string;
     comments?: string[];
 }

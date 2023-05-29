@@ -7,9 +7,9 @@ import FiledRequestCard from "@components/FiledRequestCard/FiledRequestCard";
 
 interface TicketFeedContainerInterface {
     filedRequestData: {[id: string]: FiledRequest},
-    deleteFiledRequestHandlerGenerator: Function,
+    deleteFiledRequestHandlerGenerator: (filedRequestId: string) => (() => void),
     insightData: {[id: string]: Insight},
-    deleteInsightHandlerGenerator: Function
+    deleteInsightHandlerGenerator: (insightId: string) => (() => void)
 }
 
 type DisplayType = "Requests" | "Insights"
@@ -19,9 +19,6 @@ const TicketFeedContainer = ({   filedRequestData,
                                  insightData,
                                  deleteInsightHandlerGenerator }: TicketFeedContainerInterface) => {
     const [currentDisplay, setCurrentDisplay] = useState<DisplayType>("Requests");
-
-    console.log(filedRequestData)
-    console.log(Object.entries(filedRequestData))
     return (
         <Box>
             <p style={{color: "#000", textAlign: 'end', padding:'1rem 2rem'}}>Sort by Recommended</p>
@@ -32,13 +29,12 @@ const TicketFeedContainer = ({   filedRequestData,
             <Button  onClick={() => {setCurrentDisplay("Insights");} }>
                 Show Insights
             </Button>
-            {currentDisplay == "Requests" &&
+            {currentDisplay === "Requests" ?
             <Box sx={{margin:'2rem auto', display:'flex', flexDirection:'column', alignItems:'center'}}>
                 {Object.entries(filedRequestData).map(([filedRequestId, filedRequest]) => (
                     <FiledRequestCard filedRequestCardData={filedRequest} onDelete={deleteFiledRequestHandlerGenerator(filedRequestId)}/>
                 ))}
-            </Box>}
-            {currentDisplay == "Insights" &&
+            </Box> :
             <Box sx={{margin:'2rem auto', display:'flex', flexDirection:'column', alignItems:'center'}}>
                 {Object.entries(insightData).map(([insightId, insight]) => (
                     <InsightCard insightCardData={insight} onDelete={deleteInsightHandlerGenerator(insightId)}/>
