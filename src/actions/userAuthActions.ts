@@ -21,7 +21,7 @@ export const signUp = (userEmailCredentials: UserEmailCredentials) => {
 
             });
         })
-        .catch((error: unknown) => {
+        .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             // ..
@@ -47,7 +47,7 @@ export const signInWithGoogle = () => {
         .then((firebaseUserCredential: UserCredential) => {
             const user = firebaseUserCredential.user;
             // ...
-        }).catch((error: unknown) => {
+        }).catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
