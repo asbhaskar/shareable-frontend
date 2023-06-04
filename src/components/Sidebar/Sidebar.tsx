@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import {Box} from '@mui/material'
 import styles from './style'
 import Logo from '../../assets/images/shareable-logo.png'
 
@@ -9,7 +9,6 @@ function Sidebar() {
                 <img src={Logo} alt="shareable-logo" style={{width: '50px'}}/>
                 <p>Shareable</p>
             </Box>
-            
         </Box>
     )
 }

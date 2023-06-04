@@ -1,27 +1,28 @@
 import { Box, Button, Card } from '@mui/material'
 import styles from './style'
-import { jsx, css } from "@emotion/react"
-import {Insight} from "@interfaces/insight";
+import {FiledRequest} from "@interfaces/filedRequest";
 
-interface InsightCard {
-    insightCardData: Insight,
+// Just copied over from InsightCard as first draft, field layout will be adjusted
+interface FiledRequestCard {
+    filedRequestCardData: FiledRequest,
     onDelete: () => void
 }
 
-function InsightCard({
-    insightCardData,
+function FiledRequestCard({
+    filedRequestCardData,
     onDelete
-}: InsightCard) {
+}: FiledRequestCard) {
     const {
-        title, 
+        createdBy,
         createDate,
-        imgs, 
-        outcomeNumber, 
-        keyStat, 
-        keyNumber, 
-        tldr, 
-        takeaway
-    } = insightCardData
+        lastUpdated,
+        title,
+        assignee,
+        priority,
+        status,
+        deadline,
+        description
+    } = filedRequestCardData
 
     return (
         <Card sx={styles.card}>
@@ -31,27 +32,29 @@ function InsightCard({
                     <h4>{createDate}</h4>
                 </Box>
                 <Box sx={{marginLeft: '2rem'}}>
-                    <h4 style={{color: '#EC7B14'}}>{outcomeNumber} Outcomes</h4>
+                    <h4 style={{color: '#EC7B14'}}>{assignee} Assignee</h4>
                 </Box>
             </Box>
             <Box sx={styles.card__body}>
                 <Box sx={{width: '60%'}}>
                     <Box>
-                        {keyStat}
+                        {description}
                     </Box>
                     <Box>
-                        {keyNumber}
+                        {deadline}
                     </Box>
                     <Box>
-                        {tldr}
+                        {status}
                     </Box>
                     <Box>
-                        {takeaway}
+                        {priority}
                     </Box>
-                </Box>
-                {/* TODO: Make img array into separate component w support for multiple imgs */}
-                <Box sx={styles.card__imgs}>
-                    <img src={imgs[0].src} alt={imgs[0].alt}/>
+                    <Box>
+                        {createdBy}
+                    </Box>
+                    <Box>
+                        {lastUpdated}
+                    </Box>
                 </Box>
             </Box>
             <Box sx={styles.card__footer}>
@@ -67,12 +70,12 @@ function InsightCard({
                 </Button>
                 {/* Exclude delete button for hardcoded demo insights */}
                 {!title.includes("DEMO") &&
-                <Button onClick={onDelete}>
-                    Delete
-                </Button>}
+                    <Button onClick={onDelete}>
+                        Delete
+                    </Button>}
             </Box>
         </Card>
     )
 }
 
-export default InsightCard
+export default FiledRequestCard

@@ -35,7 +35,7 @@ export const signIn = async (userEmailCredentials: UserEmailCredentials) => {
         .then((firebaseUserCredential: UserCredential) => {
             response = firebaseUserCredential
         })
-        .catch((error) => {
+        .catch((error: unknown) => {
             response = error
         });
     return response;
