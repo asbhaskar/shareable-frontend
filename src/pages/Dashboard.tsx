@@ -10,27 +10,48 @@ import {addFiledRequest, deleteFiledRequest, getFiledRequests} from "../actions/
 import {FiledRequest} from "@interfaces/filedRequest";
 import {DEMO_REQUESTS} from "../databases/filedRequests";
 import {DEMO_INSIGHTS} from "../databases/insights";
+import {addUserToGroup, getUser, removeUserFromGroup} from "../actions/userActions";
+import {TEST_USER, User} from "@interfaces/user";
 
 const Dashboard = () => {
+    const [currentViewedGroup, setCurrentViewedGroup] = useState<string>(TEST_GROUP);
+    const [currentUserGroups, setUserGroups] = useState<string[]>([TEST_GROUP]);
     const [displayedRequests, setDisplayedRequests] = useState<{[id: string]: FiledRequest}>(DEMO_REQUESTS);
     const [displayedInsights, setDisplayedInsights] = useState<{[id: string]: Insight}>(DEMO_INSIGHTS);
+    const [newGroupNameInput, setNewGroupNameInput] = useState<string>("");
 
     useEffect(() => {
         (async () => {
             try {
-                const storedRequests = await getFiledRequests(TEST_ORGANIZATION, TEST_GROUP);
-                setDisplayedRequests({...displayedRequests, ...storedRequests});
+                // TODO User should be fetched and persisted upon login
+                const user: User = await getUser(TEST_USER);
+                setUserGroups([TEST_GROUP].concat(user.groupsIds));
             } catch (error: unknown) {
-                console.log("Fetching requests broken very sad")
+                console.log("Fetching user broken very sad")
             }
-            try {
-                const storedInsights = await getInsights(TEST_ORGANIZATION, TEST_GROUP);
-                setDisplayedInsights({...displayedInsights, ...storedInsights});
-            } catch (error: unknown) {
-                console.log("Fetching insights broken very sad")
-            }
+            await loadRequestsAndInsights(currentUserGroups[0]);
         })();
     }, [])
+
+    const loadRequestsAndInsights = async (groupName: string) => {
+        try {
+            const storedRequests = await getFiledRequests(TEST_ORGANIZATION, groupName);
+            setDisplayedRequests({...DEMO_REQUESTS, ...storedRequests});
+        } catch (error: unknown) {
+            console.log("Fetching requests broken very sad")
+        }
+        try {
+            const storedInsights = await getInsights(TEST_ORGANIZATION, groupName);
+            setDisplayedInsights({...DEMO_INSIGHTS, ...storedInsights});
+        } catch (error: unknown) {
+            console.log("Fetching insights broken very sad")
+        }
+    }
+
+    const switchViewedGroup = async (groupName: string) => {
+        setCurrentViewedGroup(groupName);
+        await loadRequestsAndInsights(groupName);
+    }
 
     // Generate and store hardcoded insight object for now
     const createNewInsight = async () => {
@@ -50,7 +71,7 @@ const Dashboard = () => {
             collaborators: ['UserId1']
         };
         try {
-            const insightId: string = await addInsight(TEST_ORGANIZATION, TEST_GROUP, hardcodedInsight);
+            const insightId: string = await addInsight(TEST_ORGANIZATION, currentViewedGroup, hardcodedInsight);
             const newInsightEntry: {[id: string]: Insight} = {[insightId]: hardcodedInsight}
             setDisplayedInsights({...displayedInsights, ...newInsightEntry});
         } catch (error: unknown) {
@@ -72,7 +93,7 @@ const Dashboard = () => {
             deadline: 123
         };
         try {
-            const filedRequestId: string = await addFiledRequest(TEST_ORGANIZATION, TEST_GROUP, hardcodedFiledRequest);
+            const filedRequestId: string = await addFiledRequest(TEST_ORGANIZATION, currentViewedGroup, hardcodedFiledRequest);
             const newRequestEntry: {[id: string]: FiledRequest} = {[filedRequestId]: hardcodedFiledRequest}
             setDisplayedRequests({...displayedRequests, ...newRequestEntry});
         } catch (error: unknown) {
@@ -81,10 +102,37 @@ const Dashboard = () => {
         }
     }
 
+    const createNewGroup = async (groupName: string) => {
+        try {
+            await addUserToGroup(TEST_USER, groupName);
+            setUserGroups(currentUserGroups.concat(groupName));
+            await switchViewedGroup(groupName);
+            setNewGroupNameInput("");
+        } catch (error: unknown) {
+            // Replace with user visible messaging
+            console.log("Could not create new group");
+        }
+    }
+
+    const leaveGroup = async (groupName: string) => {
+        try {
+            await removeUserFromGroup(TEST_USER, groupName);
+            const filteredUserGroups: string[] = currentUserGroups.filter((userGroup) => userGroup !== groupName);
+            setUserGroups(filteredUserGroups);
+            if (currentViewedGroup === groupName) {
+                // In current testing state user will always belong to at least DEMO_GROUP
+                await switchViewedGroup(filteredUserGroups[0]);
+            }
+        } catch (error: unknown) {
+            // Replace with user visible messaging
+            console.log("Could not leave group");
+        }
+    }
+
     const generateDeleteFiledRequestHandler = (filedRequestId: string): (() => void) => {
         return async () => {
             try {
-                await deleteFiledRequest(TEST_ORGANIZATION, TEST_GROUP, filedRequestId);
+                await deleteFiledRequest(TEST_ORGANIZATION, currentViewedGroup, filedRequestId);
                 const requestsCopy: {[id: string]: FiledRequest} = {...displayedRequests};
                 delete requestsCopy[filedRequestId];
                 setDisplayedRequests(requestsCopy);
@@ -97,7 +145,7 @@ const Dashboard = () => {
     const generateDeleteInsightHandler = (insightId: string): (() => void) => {
         return async () => {
             try {
-                await deleteInsight(TEST_ORGANIZATION, TEST_GROUP, insightId);
+                await deleteInsight(TEST_ORGANIZATION, currentViewedGroup, insightId);
                 const insightsCopy: {[insightId: string]: Insight} = {...displayedInsights};
                 delete insightsCopy[insightId];
                 setDisplayedInsights(insightsCopy);
@@ -113,7 +161,9 @@ const Dashboard = () => {
             background: '#fff',
             width: '100vw',
             height:'100vh',
-            marginTop:'100px'
+            marginTop:'100px',
+            // Temporarily forcing this to be visible while the front end structuring is still underway
+            zIndex: 100
         }}>
             {/**TODO: Current button placement is very cursed, need to adjust**/}
             <Button onClick={createNewFiledRequest}>
@@ -122,6 +172,38 @@ const Dashboard = () => {
             <Button onClick={createNewInsight}>
                 New Insight
             </Button>
+            {/**TODO: Popup form for new group**/}
+            <div>
+                <form onSubmit={() => createNewGroup(newGroupNameInput)}>
+                    <label>
+                        New Group Name:
+                        <input
+                            type="text"
+                            value={newGroupNameInput}
+                            onChange={changeEvent => setNewGroupNameInput(changeEvent.target.value)}
+                            minLength={3}
+                            maxLength={25}
+                        />
+                    </label>
+                    <input type="submit" value="Submit" />
+                </form>
+            </div>
+            <div>
+                <span>Groups:</span>
+                <ul>
+                    {currentUserGroups.map(group => (
+                        <li
+                            style={currentViewedGroup === group ? {color: 'blue'} : {cursor: 'pointer'}}
+                            onClick={currentViewedGroup !== group ? async () => {await switchViewedGroup(group);} : undefined}
+                        >
+                            {group}
+                            {group !== TEST_GROUP && <Button onClick={async () => {await leaveGroup(group)}}>
+                                Leave Group
+                            </Button>}
+                        </li>
+                    ))}
+                </ul>
+            </div>
             <TicketFeedContainer filedRequestData={displayedRequests}
                                  deleteFiledRequestHandlerGenerator={generateDeleteFiledRequestHandler}
                                  insightData={displayedInsights}
