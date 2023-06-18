@@ -1,8 +1,8 @@
-import { Box } from '@mui/system'
-import React from 'react'
+import { Box } from '@mui/system';
+import React from 'react';
 
 interface ImageBlockInterface {
-    imgs: { src: string; alt: string }[]
+    imgs: { src: string; alt: string }[];
 }
 
 const ImageBlock = ({ imgs }: ImageBlockInterface) => {
@@ -18,7 +18,7 @@ const ImageBlock = ({ imgs }: ImageBlockInterface) => {
             {imgs.length === 3 && <Box></Box>}
             {imgs.length > 3 && <Box></Box>}
         </Box>
-    )
-}
+    );
+};
 
-export default ImageBlock
+export default ImageBlock;

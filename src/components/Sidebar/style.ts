@@ -1,8 +1,3 @@
-import { jsx, css } from '@emotion/react'
-// import { useTheme } from "@mui/material/styles"
-
-// const theme = useTheme()
-
 const styles = {
     sidebar: {
         display: 'block',
@@ -15,6 +10,6 @@ const styles = {
         border: '1px solid #000',
         // padding: '1rem 1rem 1rem 1rem',
     },
-}
+};
 
-export default styles
+export default styles;

@@ -1,9 +1,9 @@
-import { Box } from '@mui/material'
-import { InsightDataInterface } from '../../../interfaces/InsightData'
-import InsightCard from '../InsightCard/InsightCard'
+import { Box } from '@mui/material';
+import { InsightDataInterface } from '../../../interfaces/InsightData';
+import InsightCard from '../InsightCard/InsightCard';
 
 interface TicketFeedContainerInterface {
-    insightData: InsightDataInterface[]
+    insightData: InsightDataInterface[];
 }
 
 const TicketFeedContainer = ({ insightData }: TicketFeedContainerInterface) => {
@@ -33,7 +33,7 @@ const TicketFeedContainer = ({ insightData }: TicketFeedContainerInterface) => {
                 ))}
             </Box>
         </Box>
-    )
-}
+    );
+};
 
-export default TicketFeedContainer
+export default TicketFeedContainer;

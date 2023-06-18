@@ -1,5 +1,5 @@
-import { Box } from '@mui/material'
-import React from 'react'
+import { Box } from '@mui/material';
+import React from 'react';
 
 const Navbar = () => {
     return (
@@ -17,7 +17,7 @@ const Navbar = () => {
         >
             <p>Navbar here</p>
         </Box>
-    )
-}
+    );
+};
 
-export default Navbar
+export default Navbar;

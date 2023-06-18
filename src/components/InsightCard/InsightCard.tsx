@@ -1,15 +1,15 @@
-import { Box, Button, Card } from '@mui/material'
-import styles from './style'
-import { jsx, css } from '@emotion/react'
-import { InsightDataInterface } from '../../../interfaces/InsightData'
+import { Box, Button, Card } from '@mui/material';
+import styles from './style';
+import { jsx, css } from '@emotion/react';
+import { InsightDataInterface } from '../../../interfaces/InsightData';
 
 interface InsightCard {
-    insightCardData: InsightDataInterface
+    insightCardData: InsightDataInterface;
 }
 
 function InsightCard({ insightCardData }: InsightCard) {
     const { title, date, imgs, outcomeNumber, keyStat, keyNumber, tldr, takeaways } =
-        insightCardData
+        insightCardData;
 
     return (
         <Card sx={styles.card}>
@@ -43,7 +43,7 @@ function InsightCard({ insightCardData }: InsightCard) {
                 <Button>Share</Button>
             </Box>
         </Card>
-    )
+    );
 }
 
-export default InsightCard
+export default InsightCard;

@@ -1,6 +1,6 @@
-import TicketFeedContainer from '../components/TicketFeedContainer/TicketFeedContainer'
-import { InsightDataInterface } from '../../interfaces/InsightData'
-import Logo from '../assets/images/shareable-logo.png'
+import TicketFeedContainer from '../components/TicketFeedContainer/TicketFeedContainer';
+import { InsightDataInterface } from '../../interfaces/InsightData';
+import Logo from '../assets/images/shareable-logo.png';
 
 const InsightData: InsightDataInterface[] = [
     {
@@ -25,10 +25,10 @@ const InsightData: InsightDataInterface[] = [
         tldr: 'string string string string string string string string string ',
         takeaways: 'string string string string string string string string',
     },
-]
+];
 
 const Dashboard = () => {
-    return <TicketFeedContainer insightData={InsightData} />
-}
+    return <TicketFeedContainer insightData={InsightData} />;
+};
 
-export default Dashboard
+export default Dashboard;

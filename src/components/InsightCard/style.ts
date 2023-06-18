@@ -1,8 +1,3 @@
-import { jsx, css } from '@emotion/react'
-// import { useTheme } from "@mui/material/styles"
-
-// const theme = useTheme()
-
 const styles = {
     card: {
         minWidth: '400px',
@@ -30,6 +25,6 @@ const styles = {
         margin: '2rem 10rem 0rem 10rem',
         justifyContent: 'space-between',
     },
-}
+};
 
-export default styles
+export default styles;

@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import * as path from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import * as path from 'path';
 
 // const path = require('path');
 
@@ -16,4 +16,4 @@ export default defineConfig({
             '@interfaces': path.resolve(__dirname, 'interfaces'),
         },
     },
-})
+});

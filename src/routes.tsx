@@ -1,12 +1,12 @@
-import { ReactNode } from 'react'
+import { ReactNode } from 'react';
 
-import Dashboard from '@pages/Dashboard'
-import SignIn from '@pages/SignIn'
-import { Navigate } from 'react-router-dom'
+import Dashboard from '@pages/Dashboard';
+import SignIn from '@pages/SignIn';
+import { Navigate } from 'react-router-dom';
 
 interface Route {
-    path: string
-    element: ReactNode
+    path: string;
+    element: ReactNode;
 }
 
 const routes: Route[] = [
@@ -26,6 +26,6 @@ const routes: Route[] = [
     //     path: '*',
     //     element: <Navigate to="/sign-in" />
     // }
-]
+];
 
-export default routes
+export default routes;

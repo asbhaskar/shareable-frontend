@@ -1,9 +1,12 @@
-import { Box, Button, CircularProgress, TextField } from '@mui/material'
-import styles from './style'
-import { useFormik } from 'formik'
-import { useNavigate } from 'react-router-dom'
+import { Alert, Box, Button, CircularProgress, TextField } from '@mui/material';
+import styles from './style';
+import { useFormik } from 'formik';
+import { useNavigate } from 'react-router-dom';
+import { signIn } from '../../actions/userAuthActions';
+import { useState } from 'react';
 const SignInForm = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [error, setError] = useState<string>('');
     const {
         handleChange,
         handleSubmit,
@@ -15,14 +18,15 @@ const SignInForm = () => {
             password: '',
         },
         onSubmit: async ({ email, password }) => {
-            // const response = await authSignIn(email, password);
-            // if (response.name === 'FirebaseError') {
-            //     setError(response.code);
-            // } else {
-            //     navigate('/dashboard');
-            // }
+            const UserEmailCredentials = { email: email, password: password };
+            const response = await signIn(UserEmailCredentials);
+            if (response?.name === 'FirebaseError') {
+                setError(response?.code);
+            } else {
+                navigate('/dashboard');
+            }
         },
-    })
+    });
     return (
         <Box sx={styles.signIn__container}>
             {isSubmitting ? (
@@ -50,15 +54,17 @@ const SignInForm = () => {
                         value={password}
                         sx={styles.form__input}
                     />
-                    {/* <Form.Group className="mb-3"> */}
-                    {/* {error && <Alert variant="danger">{error}</Alert>} */}
+                    {error && (
+                        <Alert variant="filled" severity="error" sx={{ width: '250px' }}>
+                            {error}
+                        </Alert>
+                    )}
                     <Button type="submit" sx={styles.form__submit}>
                         Sign In
                     </Button>
-                    {/* </Form.Group> */}
                 </Box>
             )}
         </Box>
-    )
-}
-export default SignInForm
+    );
+};
+export default SignInForm;

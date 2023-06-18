@@ -60,6 +60,6 @@ const styles = {
             backgroundColor: '#C2D1FF',
         },
     },
-}
+};
 
-export default styles
+export default styles;

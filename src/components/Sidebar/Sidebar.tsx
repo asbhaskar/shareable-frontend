@@ -1,6 +1,6 @@
-import { Box } from '@mui/material'
-import styles from './style'
-import Logo from '../../assets/images/shareable-logo.png'
+import { Box } from '@mui/material';
+import styles from './style';
+import Logo from '../../assets/images/shareable-logo.png';
 
 function Sidebar() {
     return (
@@ -18,7 +18,7 @@ function Sidebar() {
                 <p>Shareable</p>
             </Box>
         </Box>
-    )
+    );
 }
 
-export default Sidebar
+export default Sidebar;
