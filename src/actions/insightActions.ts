@@ -39,19 +39,19 @@ export const updateInsight = (organization: string, group: string, insightId: st
         });
 }
 
-export const getInsight = async (organization: string, group: string, insightId: string): Promise<Insight | undefined> => {
+export const getInsight = async (organization: string, group: string, insightId: string): Promise<Insight> => {
     try {
         const insightDocument =
             await getDoc(doc(firestore, `${ORGANIZATIONS_COLLECTION}/${organization}/${GROUPS_COLLECTION}/${group}/${INSIGHTS_COLLECTION}`, insightId))
         if (insightDocument.exists()) {
             return insightDocument.data() as Insight
-        } else {
-            console.log("Error - FireStore - Getting Insight: No insight found for id: " + insightId)
         }
     } catch (error: unknown) {
         console.log("Error - FireStore - Getting Insight: ", error);
         throw error
     }
+    console.log("Error - FireStore - Getting Insight: No insight found for id: " + insightId);
+    throw new Error();
 }
 
 export const deleteInsight = async (organization: string, group: string, insightId: string) => {

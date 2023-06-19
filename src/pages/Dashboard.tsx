@@ -10,12 +10,14 @@ import {addFiledRequest, deleteFiledRequest, getFiledRequests} from "../actions/
 import {FiledRequest} from "@interfaces/filedRequest";
 import {DEMO_REQUESTS} from "../databases/filedRequests";
 import {DEMO_INSIGHTS} from "../databases/insights";
-import {addUserToGroup, getUser, removeUserFromGroup} from "../actions/userActions";
+import {getUser} from "../actions/userActions";
 import {TEST_USER, User} from "@interfaces/user";
+import {addUserToGroup} from "../api/addUserToGroup";
+import {removeUserFromGroup} from "../api/removeUserFromGroup";
 
 const Dashboard = () => {
     const [currentViewedGroup, setCurrentViewedGroup] = useState<string>(TEST_GROUP);
-    const [currentUserGroups, setUserGroups] = useState<string[]>([TEST_GROUP]);
+    const [currentUserGroups, setCurrentUserGroups] = useState<string[]>([TEST_GROUP]);
     const [displayedRequests, setDisplayedRequests] = useState<{[id: string]: FiledRequest}>(DEMO_REQUESTS);
     const [displayedInsights, setDisplayedInsights] = useState<{[id: string]: Insight}>(DEMO_INSIGHTS);
     const [newGroupNameInput, setNewGroupNameInput] = useState<string>("");
@@ -25,33 +27,29 @@ const Dashboard = () => {
             try {
                 // TODO User should be fetched and persisted upon login
                 const user: User = await getUser(TEST_USER);
-                setUserGroups([TEST_GROUP].concat(user.groupsIds));
+                setCurrentUserGroups([TEST_GROUP].concat(user.groupsIds));
             } catch (error: unknown) {
                 console.log("Fetching user broken very sad")
             }
-            await loadRequestsAndInsights(currentUserGroups[0]);
         })();
     }, [])
 
-    const loadRequestsAndInsights = async (groupName: string) => {
-        try {
-            const storedRequests = await getFiledRequests(TEST_ORGANIZATION, groupName);
-            setDisplayedRequests({...DEMO_REQUESTS, ...storedRequests});
-        } catch (error: unknown) {
-            console.log("Fetching requests broken very sad")
-        }
-        try {
-            const storedInsights = await getInsights(TEST_ORGANIZATION, groupName);
-            setDisplayedInsights({...DEMO_INSIGHTS, ...storedInsights});
-        } catch (error: unknown) {
-            console.log("Fetching insights broken very sad")
-        }
-    }
-
-    const switchViewedGroup = async (groupName: string) => {
-        setCurrentViewedGroup(groupName);
-        await loadRequestsAndInsights(groupName);
-    }
+    useEffect(() => {
+        (async () => {
+            try {
+                const storedRequests = await getFiledRequests(TEST_ORGANIZATION, currentViewedGroup);
+                setDisplayedRequests({...DEMO_REQUESTS, ...storedRequests});
+            } catch (error: unknown) {
+                console.log("Fetching requests broken very sad")
+            }
+            try {
+                const storedInsights = await getInsights(TEST_ORGANIZATION, currentViewedGroup);
+                setDisplayedInsights({...DEMO_INSIGHTS, ...storedInsights});
+            } catch (error: unknown) {
+                console.log("Fetching insights broken very sad")
+            }
+        })();
+    }, [currentViewedGroup])
 
     // Generate and store hardcoded insight object for now
     const createNewInsight = async () => {
@@ -105,8 +103,8 @@ const Dashboard = () => {
     const createNewGroup = async (groupName: string) => {
         try {
             await addUserToGroup(TEST_USER, groupName);
-            setUserGroups(currentUserGroups.concat(groupName));
-            await switchViewedGroup(groupName);
+            setCurrentUserGroups([...currentUserGroups, groupName]);
+            setCurrentViewedGroup(groupName);
             setNewGroupNameInput("");
         } catch (error: unknown) {
             // Replace with user visible messaging
@@ -118,10 +116,10 @@ const Dashboard = () => {
         try {
             await removeUserFromGroup(TEST_USER, groupName);
             const filteredUserGroups: string[] = currentUserGroups.filter((userGroup) => userGroup !== groupName);
-            setUserGroups(filteredUserGroups);
+            setCurrentUserGroups(filteredUserGroups);
             if (currentViewedGroup === groupName) {
                 // In current testing state user will always belong to at least DEMO_GROUP
-                await switchViewedGroup(filteredUserGroups[0]);
+                setCurrentViewedGroup(filteredUserGroups[0]);
             }
         } catch (error: unknown) {
             // Replace with user visible messaging
@@ -172,7 +170,7 @@ const Dashboard = () => {
             <Button onClick={createNewInsight}>
                 New Insight
             </Button>
-            {/**TODO: Popup form for new group**/}
+            {/**TODO: Popup form for new group, validation for input fields**/}
             <div>
                 <form onSubmit={() => createNewGroup(newGroupNameInput)}>
                     <label>
@@ -180,7 +178,7 @@ const Dashboard = () => {
                         <input
                             type="text"
                             value={newGroupNameInput}
-                            onChange={changeEvent => setNewGroupNameInput(changeEvent.target.value)}
+                            onChange={e => setNewGroupNameInput(e.target.value)}
                             minLength={3}
                             maxLength={25}
                         />
@@ -192,12 +190,11 @@ const Dashboard = () => {
                 <span>Groups:</span>
                 <ul>
                     {currentUserGroups.map(group => (
-                        <li
-                            style={currentViewedGroup === group ? {color: 'blue'} : {cursor: 'pointer'}}
-                            onClick={currentViewedGroup !== group ? async () => {await switchViewedGroup(group);} : undefined}
-                        >
-                            {group}
-                            {group !== TEST_GROUP && <Button onClick={async () => {await leaveGroup(group)}}>
+                        <li style={currentViewedGroup === group ? {color: 'blue'} : {cursor: 'pointer'}}>
+                            <span onClick={() => {setCurrentViewedGroup(group)}}>
+                                {group}
+                            </span>
+                            {group !== TEST_GROUP && <Button onClick={() => {leaveGroup(group)}}>
                                 Leave Group
                             </Button>}
                         </li>
