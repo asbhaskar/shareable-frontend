@@ -1,16 +1,25 @@
 import { Box, Button, Card } from '@mui/material';
 import styles from './style';
-import { jsx, css } from '@emotion/react';
-import { Insight } from '@interfaces/insight';
+import { FiledRequest } from '@interfaces/filedRequest';
 
-interface InsightCard {
-    insightCardData: Insight;
+// Just copied over from InsightCard as first draft, field layout will be adjusted
+interface FiledRequestCard {
+    filedRequestCardData: FiledRequest;
     onDelete: () => void;
 }
 
-function InsightCard({ insightCardData, onDelete }: InsightCard) {
-    const { title, createDate, imgs, outcomeNumber, keyStat, keyNumber, tldr, takeaway } =
-        insightCardData;
+function FiledRequestCard({ filedRequestCardData, onDelete }: FiledRequestCard) {
+    const {
+        createdBy,
+        createDate,
+        lastUpdated,
+        title,
+        assignee,
+        priority,
+        status,
+        deadline,
+        description,
+    } = filedRequestCardData;
 
     return (
         <Card sx={styles.card}>
@@ -20,19 +29,17 @@ function InsightCard({ insightCardData, onDelete }: InsightCard) {
                     <h4>{createDate}</h4>
                 </Box>
                 <Box sx={{ marginLeft: '2rem' }}>
-                    <h4 style={{ color: '#EC7B14' }}>{outcomeNumber} Outcomes</h4>
+                    <h4 style={{ color: '#EC7B14' }}>{assignee} Assignee</h4>
                 </Box>
             </Box>
             <Box sx={styles.card__body}>
                 <Box sx={{ width: '60%' }}>
-                    <Box>{keyStat}</Box>
-                    <Box>{keyNumber}</Box>
-                    <Box>{tldr}</Box>
-                    <Box>{takeaway}</Box>
-                </Box>
-                {/* TODO: Make img array into separate component w support for multiple imgs */}
-                <Box sx={styles.card__imgs}>
-                    <img src={imgs[0].src} alt={imgs[0].alt} />
+                    <Box>{description}</Box>
+                    <Box>{deadline}</Box>
+                    <Box>{status}</Box>
+                    <Box>{priority}</Box>
+                    <Box>{createdBy}</Box>
+                    <Box>{lastUpdated}</Box>
                 </Box>
             </Box>
             <Box sx={styles.card__footer}>
@@ -49,4 +56,4 @@ function InsightCard({ insightCardData, onDelete }: InsightCard) {
     );
 }
 
-export default InsightCard;
+export default FiledRequestCard;

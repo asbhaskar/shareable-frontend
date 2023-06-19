@@ -6,7 +6,7 @@ import { Organization, ORGANIZATIONS_COLLECTION } from '../../interfaces/organiz
 export const addOrganization = (organization: Organization) => {
     const uuid: string = uuidv4();
 
-    setDoc(doc(firestore, ORGANIZATIONS_COLLECTION, uuid), organization).catch(error => {
+    setDoc(doc(firestore, ORGANIZATIONS_COLLECTION, uuid), organization).catch((error: unknown) => {
         console.log('Error - FireStore - Adding Organization: ', error);
     });
 };
@@ -15,7 +15,7 @@ export const getOrganization = (organizationId: string): Organization | null => 
         .then(documentSnapshot => {
             return documentSnapshot.data() as Organization;
         })
-        .catch(error => {
+        .catch((error: unknown) => {
             console.log('Error - FireStore - Getting Organization: ', error);
         });
     return null;
@@ -24,7 +24,7 @@ export const getOrganization = (organizationId: string): Organization | null => 
 export const addExecutiveToOrganization = (organizationId: string, userId: string) => {
     updateDoc(doc(firestore, `${ORGANIZATIONS_COLLECTION}/${organizationId}`), {
         executives: arrayUnion(userId),
-    }).catch(error => {
+    }).catch((error: unknown) => {
         console.log('Error - FireStore - Adding executive to organization: ', error);
     });
 };
@@ -32,7 +32,7 @@ export const addExecutiveToOrganization = (organizationId: string, userId: strin
 export const removeExecutiveFromOrganization = (organizationId: string, userId: string) => {
     updateDoc(doc(firestore, `${ORGANIZATIONS_COLLECTION}/${organizationId}`), {
         executives: arrayRemove(userId),
-    }).catch(error => {
+    }).catch((error: unknown) => {
         console.log('Error - FireStore - Removing executive from organization: ', error);
     });
 };

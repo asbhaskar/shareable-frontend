@@ -21,7 +21,7 @@ export const addGroup = (organizationId: string, group: Group) => {
     setDoc(
         doc(firestore, `${ORGANIZATIONS_COLLECTION}/${organizationId}/${GROUPS_COLLECTION}`, uuid),
         group
-    ).catch(error => {
+    ).catch((error: unknown) => {
         console.log('Error - FireStore - Adding Group: ', error);
     });
 };
@@ -37,7 +37,7 @@ export const getGroup = (organizationId: string, groupId: string): Group | null 
         .then(documentSnapshot => {
             return documentSnapshot.data() as Group;
         })
-        .catch(error => {
+        .catch((error: unknown) => {
             console.log('Error - FireStore - Getting Group: ', error);
         });
     return null;
@@ -57,7 +57,7 @@ export const getGroups = (organizationId: string): Map<string, Group> => {
                 groups.set(documentSnapshot.id, documentSnapshot.data() as Group);
             });
         })
-        .catch(error => {
+        .catch((error: unknown) => {
             console.log('Error - FireStore - Querying Groups: ', error);
         });
 
@@ -67,7 +67,7 @@ export const getGroups = (organizationId: string): Map<string, Group> => {
 export const addManagerToGroup = (groupId: string, userId: string) => {
     updateDoc(doc(firestore, `${GROUPS_COLLECTION}/${groupId}`), {
         managers: arrayUnion(userId),
-    }).catch(error => {
+    }).catch((error: unknown) => {
         console.log('Error - FireStore - Adding manager to group: ', error);
     });
 };
@@ -75,7 +75,7 @@ export const addManagerToGroup = (groupId: string, userId: string) => {
 export const removeManagerFromGroup = (groupId: string, userId: string) => {
     updateDoc(doc(firestore, `${GROUPS_COLLECTION}/${groupId}`), {
         managers: arrayRemove(userId),
-    }).catch(error => {
+    }).catch((error: unknown) => {
         console.log('Error - FireStore - Removing manager from group: ', error);
     });
 };

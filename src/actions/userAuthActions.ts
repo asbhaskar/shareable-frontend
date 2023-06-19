@@ -40,9 +40,8 @@ export const signIn = async (userEmailCredentials: UserEmailCredentials) => {
         .then((firebaseUserCredential: UserCredential) => {
             return firebaseUserCredential;
         })
-        .catch(error => {
-            // response = error;
-            throw error;
+        .catch((error: unknown) => {
+            response = error;
         });
     return response;
 };

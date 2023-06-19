@@ -3,11 +3,17 @@ export const INSIGHTS_COLLECTION = 'insights';
 export interface Insight {
     createdBy: string; // userId
     createDate: number;
+    lastUpdated: number;
+    ticketId: string;
     title: string;
-    request: string[]; // filedRequestIds
+    imgs: { src: string; alt: string }[];
+    outcomeNumber: number;
+    keyStat: string;
+    keyNumber: string;
+    tldr: string;
+    requests: string[]; // filedRequestIds
     collaborators: string[]; // userIds/groupsIds;
-    description?: string;
-    attachments?: string[]; // TODO Support complex media types
+    takeaway?: string;
     repositoryUrl?: string;
     comments?: string[];
 }
