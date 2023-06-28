@@ -3,7 +3,7 @@ export const TEST_USER = "TEST_USER"
 
 export interface User {
     organizationId: string;
-    groupsIds: string[]
+    groupsIds: string[];
 
     // Other misc user metadata
 }

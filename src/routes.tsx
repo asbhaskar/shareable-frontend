@@ -20,7 +20,7 @@ const routes: Route[] = [
     },
     {
         path: '/',
-        element: <Navigate to="/sign-in" />
+        element: <Navigate to="/sign-in" />,
     },
     // {
     //     path: '*',

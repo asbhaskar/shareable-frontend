@@ -1,9 +1,9 @@
-import { Alert, Box, Button, CircularProgress, TextField } from "@mui/material"
-import styles from './style'
+import { Alert, Box, Button, CircularProgress, TextField } from '@mui/material';
+import styles from './style';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import { signIn } from "../../actions/userAuthActions";
-import { useState } from "react";
+import { signIn } from '../../actions/userAuthActions';
+import { useState } from 'react';
 const SignInForm = () => {
     const navigate = useNavigate();
     const [error, setError] = useState<string>('');
@@ -18,7 +18,7 @@ const SignInForm = () => {
             password: '',
         },
         onSubmit: async ({ email, password }) => {
-            const UserEmailCredentials = {email: email, password: password}
+            const UserEmailCredentials = { email: email, password: password };
             const response = await signIn(UserEmailCredentials);
             if (response?.name === 'FirebaseError') {
                 setError(response?.code);
@@ -27,7 +27,7 @@ const SignInForm = () => {
             }
         },
     });
-    return  (
+    return (
         <Box sx={styles.signIn__container}>
             {isSubmitting ? (
                 <Box sx={styles.loading}>
@@ -54,12 +54,17 @@ const SignInForm = () => {
                         value={password}
                         sx={styles.form__input}
                     />
-                    {error && <Alert variant="filled" severity="error" sx={{width: '250px'}}>{error}</Alert>}
-                    <Button type="submit" sx={styles.form__submit}>Sign In</Button>
+                    {error && (
+                        <Alert variant="filled" severity="error" sx={{ width: '250px' }}>
+                            {error}
+                        </Alert>
+                    )}
+                    <Button type="submit" sx={styles.form__submit}>
+                        Sign In
+                    </Button>
                 </Box>
             )}
         </Box>
-    )
-}
-export default SignInForm
-
+    );
+};
+export default SignInForm;

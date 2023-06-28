@@ -40,13 +40,13 @@ const Dashboard = () => {
                 const storedRequests = await getFiledRequests(TEST_ORGANIZATION, currentViewedGroup);
                 setDisplayedRequests({...DEMO_REQUESTS, ...storedRequests});
             } catch (error: unknown) {
-                console.log("Fetching requests broken very sad")
+                console.log('Fetching requests broken very sad');
             }
             try {
                 const storedInsights = await getInsights(TEST_ORGANIZATION, currentViewedGroup);
                 setDisplayedInsights({...DEMO_INSIGHTS, ...storedInsights});
             } catch (error: unknown) {
-                console.log("Fetching insights broken very sad")
+                console.log('Fetching insights broken very sad');
             }
         })();
     }, [currentViewedGroup])
@@ -59,14 +59,14 @@ const Dashboard = () => {
             lastUpdated: 2,
             ticketId: 'DATASCI-2864:',
             title: 'FireBase - Title blah blah blah',
-            imgs: [{src: Logo, alt: 'google image'}],
+            imgs: [{ src: Logo, alt: 'google image' }],
             outcomeNumber: 21,
             keyStat: '21% increase per annum',
             keyNumber: '21%',
             tldr: 'string string string string string string string string string',
             takeaway: 'string string string string string string string string',
             requests: ['RequestId1'],
-            collaborators: ['UserId1']
+            collaborators: ['UserId1'],
         };
         try {
             const insightId: string = await addInsight(TEST_ORGANIZATION, currentViewedGroup, hardcodedInsight);
@@ -74,21 +74,21 @@ const Dashboard = () => {
             setDisplayedInsights({...displayedInsights, ...newInsightEntry});
         } catch (error: unknown) {
             // Replace with user visible messaging
-            console.log("Could not create new insight");
+            console.log('Could not create new insight');
         }
-    }
+    };
 
     // Generate and store hardcoded request object for now
     const createNewFiledRequest = async () => {
         const hardcodedFiledRequest: FiledRequest = {
-            createdBy: "BigBossId",
+            createdBy: 'BigBossId',
             createDate: 123,
             lastUpdated: 123,
-            title: "FireBase - Title blah blah blah",
-            assignee: "CodeMonkeyId",
-            priority: "High",
-            status: "Assigned",
-            deadline: 123
+            title: 'FireBase - Title blah blah blah',
+            assignee: 'CodeMonkeyId',
+            priority: 'High',
+            status: 'Assigned',
+            deadline: 123,
         };
         try {
             const filedRequestId: string = await addFiledRequest(TEST_ORGANIZATION, currentViewedGroup, hardcodedFiledRequest);
@@ -96,9 +96,9 @@ const Dashboard = () => {
             setDisplayedRequests({...displayedRequests, ...newRequestEntry});
         } catch (error: unknown) {
             // Replace with user visible messaging
-            console.log("Could not create new request");
+            console.log('Could not create new request');
         }
-    }
+    };
 
     const createNewGroup = async (groupName: string) => {
         try {
@@ -135,9 +135,9 @@ const Dashboard = () => {
                 delete requestsCopy[filedRequestId];
                 setDisplayedRequests(requestsCopy);
             } catch {
-                console.log("Could not delete filed request");
+                console.log('Could not delete filed request');
             }
-        }
+        };
     };
 
     const generateDeleteInsightHandler = (insightId: string): (() => void) => {
@@ -148,9 +148,9 @@ const Dashboard = () => {
                 delete insightsCopy[insightId];
                 setDisplayedInsights(insightsCopy);
             } catch {
-                console.log("Could not delete insight");
+                console.log('Could not delete insight');
             }
-        }
+        };
     };
 
     return (
@@ -206,7 +206,7 @@ const Dashboard = () => {
                                  insightData={displayedInsights}
                                  deleteInsightHandlerGenerator={generateDeleteInsightHandler}/>
         </Box>
-    )
-}
+    );
+};
 
-export default Dashboard
+export default Dashboard;

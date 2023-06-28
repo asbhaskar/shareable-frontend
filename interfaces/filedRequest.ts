@@ -1,8 +1,4 @@
-import {Insight} from "./insight";
-import {User} from "./user";
-import {Group} from "./group";
-
-export const REQUESTS_COLLECTION = "requests"
+export const REQUESTS_COLLECTION = 'requests';
 
 export interface FiledRequest {
     createdBy: string;
@@ -18,9 +14,9 @@ export interface FiledRequest {
     project?: string; // TODO Add project type
     description?: string;
     comments?: string[];
-    insights? : string[] // insightIds
+    insights?: string[]; // insightIds
 }
 
-type RequestPriority = "Low" | "Medium" | "High"
+type RequestPriority = 'Low' | 'Medium' | 'High';
 
-type RequestStatus = "Unassigned" | "Assigned" | "Blocked" | "Completed"
+type RequestStatus = 'Unassigned' | 'Assigned' | 'Blocked' | 'Completed';
