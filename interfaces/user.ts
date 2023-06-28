@@ -1,4 +1,6 @@
 export const USERS_COLLECTION = "users"
+export const TEST_USER = "TEST_USER"
+
 export interface User {
     organizationId: string;
     groupsIds: string[]

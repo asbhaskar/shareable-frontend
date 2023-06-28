@@ -16,8 +16,6 @@ import {ORGANIZATIONS_COLLECTION} from "@interfaces/organization";
 import {GROUPS_COLLECTION} from "@interfaces/group";
 import {CollectionReference, Query} from "@firebase/firestore";
 import firebase from "firebase/compat";
-import QuerySnapshot = firebase.firestore.QuerySnapshot;
-import DocumentData = firebase.firestore.DocumentData;
 
 const QUERY_LIMIT: number = 100
 
@@ -40,19 +38,19 @@ export const updateFiledRequest = (organization: string, group: string, filedReq
         });
 }
 
-export const getFiledRequest = async (organization: string, group: string, filedRequestId: string): Promise<FiledRequest | undefined> => {
+export const getFiledRequest = async (organization: string, group: string, filedRequestId: string): Promise<FiledRequest> => {
     try {
         const filedRequestDocument =
             await getDoc(doc(firestore, `${ORGANIZATIONS_COLLECTION}/${organization}/${GROUPS_COLLECTION}/${group}/${REQUESTS_COLLECTION}`, filedRequestId));
         if (filedRequestDocument.exists()) {
             return filedRequestDocument.data() as FiledRequest
-        } else {
-            console.log("Error - FireStore - Getting FiledRequest: No filed request found for id: " + filedRequestId)
         }
     } catch (error: unknown) {
         console.log("Error - FireStore - Getting FiledRequest: ", error);
         throw error
     }
+    console.log("Error - FireStore - Getting FiledRequest: No filed request found for id: " + filedRequestId)
+    throw new Error();
 }
 
 export const deleteFiledRequest = async (organization: string, group: string, filedRequestId: string) => {
