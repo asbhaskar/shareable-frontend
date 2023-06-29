@@ -61,7 +61,11 @@ export const updateInsight = (
     });
 };
 
-export const getInsight = async (organization: string, group: string, insightId: string): Promise<Insight> => {
+export const getInsight = async (
+    organization: string,
+    group: string,
+    insightId: string
+): Promise<Insight> => {
     try {
         const insightDocument = await getDoc(
             doc(
@@ -71,15 +75,15 @@ export const getInsight = async (organization: string, group: string, insightId:
             )
         );
         if (insightDocument.exists()) {
-            return insightDocument.data() as Insight
+            return insightDocument.data() as Insight;
         }
     } catch (error: unknown) {
         console.log('Error - FireStore - Getting Insight: ', error);
         throw error;
     }
-    console.log("Error - FireStore - Getting Insight: No insight found for id: " + insightId);
+    console.log('Error - FireStore - Getting Insight: No insight found for id: ' + insightId);
     throw new Error();
-}
+};
 
 export const deleteInsight = async (organization: string, group: string, insightId: string) => {
     try {
