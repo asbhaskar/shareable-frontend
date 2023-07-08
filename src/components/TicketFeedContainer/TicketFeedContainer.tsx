@@ -1,13 +1,14 @@
 import { Box, Button } from '@mui/material';
 import InsightCard from '../InsightCard/InsightCard';
 import { Insight } from '@interfaces/insight';
-import { FiledRequest } from '@interfaces/filedRequest';
+import { Task } from '@interfaces/task';
 import { useState } from 'react';
-import FiledRequestCard from '@components/FiledRequestCard/FiledRequestCard';
+import TaskCard from '@components/TaskCard/TaskCard';
 
 interface TicketFeedContainerInterface {
-    filedRequestData: { [id: string]: FiledRequest };
-    deleteFiledRequestHandlerGenerator: (filedRequestId: string) => () => void;
+    taskData: { [id: string]: Task };
+    editTaskHandlerGenerator: (taskId: string, task: Task) => () => void;
+    deleteTaskHandlerGenerator: (taskId: string) => () => void;
     insightData: { [id: string]: Insight };
     deleteInsightHandlerGenerator: (insightId: string) => () => void;
 }
@@ -15,8 +16,9 @@ interface TicketFeedContainerInterface {
 type DisplayType = 'Requests' | 'Insights';
 
 const TicketFeedContainer = ({
-    filedRequestData,
-    deleteFiledRequestHandlerGenerator,
+    taskData,
+    editTaskHandlerGenerator,
+    deleteTaskHandlerGenerator,
     insightData,
     deleteInsightHandlerGenerator,
 }: TicketFeedContainerInterface) => {
@@ -50,10 +52,11 @@ const TicketFeedContainer = ({
                         alignItems: 'center',
                     }}
                 >
-                    {Object.entries(filedRequestData).map(([filedRequestId, filedRequest]) => (
-                        <FiledRequestCard
-                            filedRequestCardData={filedRequest}
-                            onDelete={deleteFiledRequestHandlerGenerator(filedRequestId)}
+                    {Object.entries(taskData).map(([taskId, task]) => (
+                        <TaskCard
+                            taskCardData={task}
+                            onEdit={editTaskHandlerGenerator(taskId, task)}
+                            onDelete={deleteTaskHandlerGenerator(taskId)}
                         />
                     ))}
                 </Box>

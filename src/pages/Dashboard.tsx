@@ -4,27 +4,22 @@ import { addInsight, deleteInsight, getInsights } from '../actions/insightAction
 import { TEST_ORGANIZATION } from '@interfaces/organization';
 import { TEST_GROUP } from '@interfaces/group';
 import { Insight } from '@interfaces/insight';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Box, Button } from '@mui/material';
-import {
-    addFiledRequest,
-    deleteFiledRequest,
-    getFiledRequests,
-} from '../actions/filedRequestActions';
-import { FiledRequest } from '@interfaces/filedRequest';
-import { DEMO_REQUESTS } from '../databases/filedRequests';
+import { addTask, deleteTask, getTasks, updateTask } from '../actions/taskActions';
+import { Task } from '@interfaces/task';
+import { DEMO_TASKS } from '../databases/tasks';
 import { DEMO_INSIGHTS } from '../databases/insights';
 import { getUser } from '../actions/userActions';
 import { TEST_USER, User } from '@interfaces/user';
 import { addUserToGroup } from '../api/addUserToGroup';
 import { removeUserFromGroup } from '../api/removeUserFromGroup';
+import TaskModal, { ModalMode } from '@components/TaskModal/TaskModal';
 
 const Dashboard = () => {
     const [currentViewedGroup, setCurrentViewedGroup] = useState<string>(TEST_GROUP);
     const [currentUserGroups, setCurrentUserGroups] = useState<string[]>([TEST_GROUP]);
-    const [displayedRequests, setDisplayedRequests] = useState<{ [id: string]: FiledRequest }>(
-        DEMO_REQUESTS
-    );
+    const [displayedRequests, setDisplayedRequests] = useState<{ [id: string]: Task }>(DEMO_TASKS);
     const [displayedInsights, setDisplayedInsights] = useState<{ [id: string]: Insight }>(
         DEMO_INSIGHTS
     );
@@ -45,11 +40,8 @@ const Dashboard = () => {
     useEffect(() => {
         (async () => {
             try {
-                const storedRequests = await getFiledRequests(
-                    TEST_ORGANIZATION,
-                    currentViewedGroup
-                );
-                setDisplayedRequests({ ...DEMO_REQUESTS, ...storedRequests });
+                const storedRequests = await getTasks(TEST_ORGANIZATION, currentViewedGroup);
+                setDisplayedRequests({ ...DEMO_TASKS, ...storedRequests });
             } catch (error: unknown) {
                 console.log('Fetching requests broken very sad');
             }
@@ -76,7 +68,7 @@ const Dashboard = () => {
             keyNumber: '21%',
             tldr: 'string string string string string string string string string',
             takeaway: 'string string string string string string string string',
-            requests: ['RequestId1'],
+            tasks: ['TaskId1'],
             collaborators: ['UserId1'],
         };
         try {
@@ -94,25 +86,11 @@ const Dashboard = () => {
     };
 
     // Generate and store hardcoded request object for now
-    const createNewFiledRequest = async () => {
-        const hardcodedFiledRequest: FiledRequest = {
-            createdBy: 'BigBossId',
-            createDate: 123,
-            lastUpdated: 123,
-            title: 'FireBase - Title blah blah blah',
-            assignee: 'CodeMonkeyId',
-            priority: 'High',
-            status: 'Assigned',
-            deadline: 123,
-        };
+    const createNewTask = async (task: Task) => {
         try {
-            const filedRequestId: string = await addFiledRequest(
-                TEST_ORGANIZATION,
-                currentViewedGroup,
-                hardcodedFiledRequest
-            );
-            const newRequestEntry: { [id: string]: FiledRequest } = {
-                [filedRequestId]: hardcodedFiledRequest,
+            const taskId: string = await addTask(TEST_ORGANIZATION, currentViewedGroup, task);
+            const newRequestEntry: { [id: string]: Task } = {
+                [taskId]: task,
             };
             setDisplayedRequests({ ...displayedRequests, ...newRequestEntry });
         } catch (error: unknown) {
@@ -150,12 +128,12 @@ const Dashboard = () => {
         }
     };
 
-    const generateDeleteFiledRequestHandler = (filedRequestId: string): (() => void) => {
+    const generateDeleteTaskHandler = (taskId: string): (() => void) => {
         return async () => {
             try {
-                await deleteFiledRequest(TEST_ORGANIZATION, currentViewedGroup, filedRequestId);
-                const requestsCopy: { [id: string]: FiledRequest } = { ...displayedRequests };
-                delete requestsCopy[filedRequestId];
+                await deleteTask(TEST_ORGANIZATION, currentViewedGroup, taskId);
+                const requestsCopy: { [id: string]: Task } = { ...displayedRequests };
+                delete requestsCopy[taskId];
                 setDisplayedRequests(requestsCopy);
             } catch {
                 console.log('Could not delete filed request');
@@ -176,6 +154,50 @@ const Dashboard = () => {
         };
     };
 
+    const [isTaskModelOpen, setIsTaskModelOpen] = useState<boolean>(false);
+    const handleOpenTaskModal = () => setIsTaskModelOpen(true);
+    const handleCloseTaskModal = () => setIsTaskModelOpen(false);
+
+    const [currentTaskModalMode, setCurrentTaskModalMode] = useState<ModalMode>('Create');
+
+    const [currentEditTaskId, setCurrentEditTaskId] = useState<string>('');
+    const [currentEditTask, setCurrentEditTask] = useState<Task | undefined>();
+
+    const [loadingTaskModal, setLoadingTaskModal] = useState<boolean>(false);
+
+    const generateEditTaskHandler = (taskId: string, task: Task): (() => void) => {
+        return () => {
+            setCurrentEditTaskId(taskId);
+            setCurrentEditTask({ ...task });
+            setCurrentTaskModalMode('Edit');
+            setLoadingTaskModal(true);
+        };
+    };
+
+    const openNewTaskModal = () => {
+        setCurrentTaskModalMode('Create');
+        setLoadingTaskModal(true);
+    };
+
+    useEffect(() => {
+        if (loadingTaskModal) {
+            handleOpenTaskModal();
+            setLoadingTaskModal(false);
+        }
+    }, [loadingTaskModal]);
+
+    const editTask = async (task: Task) => {
+        try {
+            await updateTask(TEST_ORGANIZATION, currentViewedGroup, currentEditTaskId, task);
+            const requestsCopy: { [id: string]: Task } = { ...displayedRequests };
+            requestsCopy[currentEditTaskId] = task;
+            setDisplayedRequests(requestsCopy);
+        } catch (error: unknown) {
+            // Replace with user visible messaging
+            console.log('Could not update task');
+        }
+    };
+
     return (
         <Box
             sx={{
@@ -189,7 +211,15 @@ const Dashboard = () => {
             }}
         >
             {/**TODO: Current button placement is very cursed, need to adjust**/}
-            <Button onClick={createNewFiledRequest}>New Request</Button>
+            <Button onClick={openNewTaskModal}>New Request</Button>
+            <TaskModal
+                modalMode={currentTaskModalMode}
+                isModalOpen={isTaskModelOpen}
+                handleModalClose={handleCloseTaskModal}
+                createNewTask={createNewTask}
+                editTask={editTask}
+                existingTask={currentEditTask}
+            />
             <Button onClick={createNewInsight}>New Insight</Button>
             {/**TODO: Popup form for new group, validation for input fields**/}
             <div>
@@ -239,8 +269,9 @@ const Dashboard = () => {
                 </ul>
             </div>
             <TicketFeedContainer
-                filedRequestData={displayedRequests}
-                deleteFiledRequestHandlerGenerator={generateDeleteFiledRequestHandler}
+                taskData={displayedRequests}
+                editTaskHandlerGenerator={generateEditTaskHandler}
+                deleteTaskHandlerGenerator={generateDeleteTaskHandler}
                 insightData={displayedInsights}
                 deleteInsightHandlerGenerator={generateDeleteInsightHandler}
             />

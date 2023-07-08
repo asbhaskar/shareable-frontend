@@ -1,14 +1,15 @@
 import { Box, Button, Card } from '@mui/material';
 import styles from './style';
-import { FiledRequest } from '@interfaces/filedRequest';
+import { Task } from '@interfaces/task';
 
 // Just copied over from InsightCard as first draft, field layout will be adjusted
-interface FiledRequestCard {
-    filedRequestCardData: FiledRequest;
+interface TaskCard {
+    taskCardData: Task;
+    onEdit: () => void;
     onDelete: () => void;
 }
 
-function FiledRequestCard({ filedRequestCardData, onDelete }: FiledRequestCard) {
+function TaskCard({ taskCardData, onEdit, onDelete }: TaskCard) {
     const {
         createdBy,
         createDate,
@@ -19,7 +20,7 @@ function FiledRequestCard({ filedRequestCardData, onDelete }: FiledRequestCard) 
         status,
         deadline,
         description,
-    } = filedRequestCardData;
+    } = taskCardData;
 
     return (
         <Card sx={styles.card}>
@@ -50,10 +51,11 @@ function FiledRequestCard({ filedRequestCardData, onDelete }: FiledRequestCard) 
                 <Button>Comment</Button>
                 <Button>Share</Button>
                 {/* Exclude delete button for hardcoded demo insights */}
+                {!title.includes('DEMO') && <Button onClick={onEdit}>Edit</Button>}
                 {!title.includes('DEMO') && <Button onClick={onDelete}>Delete</Button>}
             </Box>
         </Card>
     );
 }
 
-export default FiledRequestCard;
+export default TaskCard;
