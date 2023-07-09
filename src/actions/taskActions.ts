@@ -78,7 +78,7 @@ export const getTask = async (
         console.log('Error - FireStore - Getting Task: ', error);
         throw error;
     }
-    console.log('Error - FireStore - Getting Task: No filed request found for id: ' + taskId);
+    console.log('Error - FireStore - Getting Task: No filed task found for id: ' + taskId);
     throw new Error();
 };
 

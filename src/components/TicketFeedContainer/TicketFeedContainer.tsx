@@ -13,7 +13,7 @@ interface TicketFeedContainerInterface {
     deleteInsightHandlerGenerator: (insightId: string) => () => void;
 }
 
-type DisplayType = 'Requests' | 'Insights';
+type DisplayType = 'Tasks' | 'Insights';
 
 const TicketFeedContainer = ({
     taskData,
@@ -22,7 +22,7 @@ const TicketFeedContainer = ({
     insightData,
     deleteInsightHandlerGenerator,
 }: TicketFeedContainerInterface) => {
-    const [currentDisplay, setCurrentDisplay] = useState<DisplayType>('Requests');
+    const [currentDisplay, setCurrentDisplay] = useState<DisplayType>('Tasks');
     return (
         <Box>
             <p style={{ color: '#000', textAlign: 'end', padding: '1rem 2rem' }}>
@@ -31,10 +31,10 @@ const TicketFeedContainer = ({
             {/**TODO: Current button placement is very cursed, need to adjust**/}
             <Button
                 onClick={() => {
-                    setCurrentDisplay('Requests');
+                    setCurrentDisplay('Tasks');
                 }}
             >
-                Show Requests
+                Show Tasks
             </Button>
             <Button
                 onClick={() => {
@@ -43,7 +43,7 @@ const TicketFeedContainer = ({
             >
                 Show Insights
             </Button>
-            {currentDisplay === 'Requests' ? (
+            {currentDisplay === 'Tasks' ? (
                 <Box
                     sx={{
                         margin: '2rem auto',

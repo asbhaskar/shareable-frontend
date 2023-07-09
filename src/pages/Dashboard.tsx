@@ -19,7 +19,7 @@ import TaskModal, { ModalMode } from '@components/TaskModal/TaskModal';
 const Dashboard = () => {
     const [currentViewedGroup, setCurrentViewedGroup] = useState<string>(TEST_GROUP);
     const [currentUserGroups, setCurrentUserGroups] = useState<string[]>([TEST_GROUP]);
-    const [displayedRequests, setDisplayedRequests] = useState<{ [id: string]: Task }>(DEMO_TASKS);
+    const [displayedTasks, setDisplayedTasks] = useState<{ [id: string]: Task }>(DEMO_TASKS);
     const [displayedInsights, setDisplayedInsights] = useState<{ [id: string]: Insight }>(
         DEMO_INSIGHTS
     );
@@ -40,10 +40,10 @@ const Dashboard = () => {
     useEffect(() => {
         (async () => {
             try {
-                const storedRequests = await getTasks(TEST_ORGANIZATION, currentViewedGroup);
-                setDisplayedRequests({ ...DEMO_TASKS, ...storedRequests });
+                const storedTasks = await getTasks(TEST_ORGANIZATION, currentViewedGroup);
+                setDisplayedTasks({ ...DEMO_TASKS, ...storedTasks });
             } catch (error: unknown) {
-                console.log('Fetching requests broken very sad');
+                console.log('Fetching tasks broken very sad');
             }
             try {
                 const storedInsights = await getInsights(TEST_ORGANIZATION, currentViewedGroup);
@@ -85,17 +85,17 @@ const Dashboard = () => {
         }
     };
 
-    // Generate and store hardcoded request object for now
+    // Generate and store hardcoded task object for now
     const createNewTask = async (task: Task) => {
         try {
             const taskId: string = await addTask(TEST_ORGANIZATION, currentViewedGroup, task);
-            const newRequestEntry: { [id: string]: Task } = {
+            const newTaskEntry: { [id: string]: Task } = {
                 [taskId]: task,
             };
-            setDisplayedRequests({ ...displayedRequests, ...newRequestEntry });
+            setDisplayedTasks({ ...displayedTasks, ...newTaskEntry });
         } catch (error: unknown) {
             // Replace with user visible messaging
-            console.log('Could not create new request');
+            console.log('Could not create new task');
         }
     };
 
@@ -132,11 +132,11 @@ const Dashboard = () => {
         return async () => {
             try {
                 await deleteTask(TEST_ORGANIZATION, currentViewedGroup, taskId);
-                const requestsCopy: { [id: string]: Task } = { ...displayedRequests };
-                delete requestsCopy[taskId];
-                setDisplayedRequests(requestsCopy);
+                const tasksCopy: { [id: string]: Task } = { ...displayedTasks };
+                delete tasksCopy[taskId];
+                setDisplayedTasks(tasksCopy);
             } catch {
-                console.log('Could not delete filed request');
+                console.log('Could not delete filed task');
             }
         };
     };
@@ -189,9 +189,9 @@ const Dashboard = () => {
     const editTask = async (task: Task) => {
         try {
             await updateTask(TEST_ORGANIZATION, currentViewedGroup, currentEditTaskId, task);
-            const requestsCopy: { [id: string]: Task } = { ...displayedRequests };
-            requestsCopy[currentEditTaskId] = task;
-            setDisplayedRequests(requestsCopy);
+            const tasksCopy: { [id: string]: Task } = { ...displayedTasks };
+            tasksCopy[currentEditTaskId] = task;
+            setDisplayedTasks(tasksCopy);
         } catch (error: unknown) {
             // Replace with user visible messaging
             console.log('Could not update task');
@@ -211,7 +211,7 @@ const Dashboard = () => {
             }}
         >
             {/**TODO: Current button placement is very cursed, need to adjust**/}
-            <Button onClick={openNewTaskModal}>New Request</Button>
+            <Button onClick={openNewTaskModal}>New Task</Button>
             <TaskModal
                 modalMode={currentTaskModalMode}
                 isModalOpen={isTaskModelOpen}
@@ -269,7 +269,7 @@ const Dashboard = () => {
                 </ul>
             </div>
             <TicketFeedContainer
-                taskData={displayedRequests}
+                taskData={displayedTasks}
                 editTaskHandlerGenerator={generateEditTaskHandler}
                 deleteTaskHandlerGenerator={generateDeleteTaskHandler}
                 insightData={displayedInsights}
