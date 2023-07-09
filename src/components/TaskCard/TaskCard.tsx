@@ -36,7 +36,7 @@ function TaskCard({ taskCardData, onEdit, onDelete }: TaskCard) {
             <Box sx={styles.card__body}>
                 <Box sx={{ width: '60%' }}>
                     <Box>{description}</Box>
-                    <Box>{deadline}</Box>
+                    <Box>{deadline != null ? deadline.toString() : ''}</Box>
                     <Box>{status}</Box>
                     <Box>{priority}</Box>
                     <Box>{createdBy}</Box>
