@@ -11,7 +11,7 @@ export interface Insight {
     keyStat: string;
     keyNumber: string;
     tldr: string;
-    requests: string[]; // filedRequestIds
+    tasks: string[]; // taskIds
     collaborators: string[]; // userIds/groupsIds;
     takeaway?: string;
     repositoryUrl?: string;

@@ -1,26 +1,28 @@
 import { Box, Button } from '@mui/material';
 import InsightCard from '../InsightCard/InsightCard';
 import { Insight } from '@interfaces/insight';
-import { FiledRequest } from '@interfaces/filedRequest';
+import { Task } from '@interfaces/task';
 import { useState } from 'react';
-import FiledRequestCard from '@components/FiledRequestCard/FiledRequestCard';
+import TaskCard from '@components/TaskCard/TaskCard';
 
 interface TicketFeedContainerInterface {
-    filedRequestData: { [id: string]: FiledRequest };
-    deleteFiledRequestHandlerGenerator: (filedRequestId: string) => () => void;
+    taskData: { [id: string]: Task };
+    editTaskHandlerGenerator: (taskId: string, task: Task) => () => void;
+    deleteTaskHandlerGenerator: (taskId: string) => () => void;
     insightData: { [id: string]: Insight };
     deleteInsightHandlerGenerator: (insightId: string) => () => void;
 }
 
-type DisplayType = 'Requests' | 'Insights';
+type DisplayType = 'Tasks' | 'Insights';
 
 const TicketFeedContainer = ({
-    filedRequestData,
-    deleteFiledRequestHandlerGenerator,
+    taskData,
+    editTaskHandlerGenerator,
+    deleteTaskHandlerGenerator,
     insightData,
     deleteInsightHandlerGenerator,
 }: TicketFeedContainerInterface) => {
-    const [currentDisplay, setCurrentDisplay] = useState<DisplayType>('Requests');
+    const [currentDisplay, setCurrentDisplay] = useState<DisplayType>('Tasks');
     return (
         <Box>
             <p style={{ color: '#000', textAlign: 'end', padding: '1rem 2rem' }}>
@@ -29,10 +31,10 @@ const TicketFeedContainer = ({
             {/**TODO: Current button placement is very cursed, need to adjust**/}
             <Button
                 onClick={() => {
-                    setCurrentDisplay('Requests');
+                    setCurrentDisplay('Tasks');
                 }}
             >
-                Show Requests
+                Show Tasks
             </Button>
             <Button
                 onClick={() => {
@@ -41,7 +43,7 @@ const TicketFeedContainer = ({
             >
                 Show Insights
             </Button>
-            {currentDisplay === 'Requests' ? (
+            {currentDisplay === 'Tasks' ? (
                 <Box
                     sx={{
                         margin: '2rem auto',
@@ -50,10 +52,11 @@ const TicketFeedContainer = ({
                         alignItems: 'center',
                     }}
                 >
-                    {Object.entries(filedRequestData).map(([filedRequestId, filedRequest]) => (
-                        <FiledRequestCard
-                            filedRequestCardData={filedRequest}
-                            onDelete={deleteFiledRequestHandlerGenerator(filedRequestId)}
+                    {Object.entries(taskData).map(([taskId, task]) => (
+                        <TaskCard
+                            taskCardData={task}
+                            onEdit={editTaskHandlerGenerator(taskId, task)}
+                            onDelete={deleteTaskHandlerGenerator(taskId)}
                         />
                     ))}
                 </Box>

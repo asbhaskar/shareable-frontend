@@ -14,7 +14,7 @@ export const DEMO_INSIGHTS: { [id: string]: Insight } = {
         keyNumber: '21%',
         tldr: 'string string string string string string string string string ',
         takeaway: 'string string string string string string string string',
-        requests: ['RequestId1'],
+        tasks: ['TaskId1'],
         collaborators: ['UserId1'],
     },
     insightId2: {
@@ -29,7 +29,7 @@ export const DEMO_INSIGHTS: { [id: string]: Insight } = {
         keyNumber: '25%',
         tldr: 'string string string string string string string string string ',
         takeaway: 'string string string string string string string string',
-        requests: ['RequestId2'],
+        tasks: ['TaskId2'],
         collaborators: ['UserId2'],
     },
 };
