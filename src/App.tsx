@@ -2,7 +2,7 @@ import { Route, HashRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import Layout from './layout/Layout';
 import routes from './routes';
-import { AuthProvider } from '@context/AuthContext';
+import { AuthProvider } from '@context/AuthaContext';
 
 const App = () => {
     return (
