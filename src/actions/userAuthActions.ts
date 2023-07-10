@@ -15,62 +15,57 @@ import { UserEmailCredentials, USERS_COLLECTION } from '../../interfaces/user';
 
 const auth = getAuth(firebaseApp);
 
-export const signUp = (userEmailCredentials: UserEmailCredentials) => {
-    const { email, password } = userEmailCredentials;
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((firebaseUserCredential: UserCredential) => {
-            const userId: string = firebaseUserCredential.user.uid;
-            setDoc(doc(firestore, USERS_COLLECTION, userId), {
-                organizationId: [TEST_ORGANIZATION],
-                groupsIds: [TEST_GROUP],
-            }).then(() => {});
-        })
-        .catch(error => {
-            // const errorCode = error.code;
-            // const errorMessage = error.message;
-            // ..
-            throw error;
+export const signUp = async (userEmailCredentials: UserEmailCredentials) => {
+    try {
+        const { email, password } = userEmailCredentials;
+        const firebaseUserCredential = createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+        ) as unknown as UserCredential;
+        const userId: string = firebaseUserCredential.user.uid;
+        setDoc(doc(firestore, USERS_COLLECTION, userId), {
+            organizationId: [TEST_ORGANIZATION],
+            groupsIds: [TEST_GROUP],
+        }).then(user => {
+            user;
         });
+    } catch (error: unknown) {
+        console.log(error);
+        throw error;
+    }
 };
 
-export const signIn = async (userEmailCredentials: UserEmailCredentials) => {
-    const { email, password } = userEmailCredentials;
-    let response: any;
-    await signInWithEmailAndPassword(auth, email, password)
-        .then((firebaseUserCredential: UserCredential) => {
-            return firebaseUserCredential;
-        })
-        .catch((error: unknown) => {
-            response = error;
-        });
-    return response;
+export const signIn = async ({ email, password }: UserEmailCredentials) => {
+    try {
+        return signInWithEmailAndPassword(auth, email, password);
+    } catch (error: unknown) {
+        console.log('API ERROR -> ', typeof error, error);
+        throw error;
+    }
 };
 
-export const signInWithGoogle = () => {
-    const googleAuthProvider: GoogleAuthProvider = new GoogleAuthProvider();
-    signInWithPopup(auth, googleAuthProvider)
-        .then((firebaseUserCredential: UserCredential) => {
-            return firebaseUserCredential.user;
-            // ...
-        })
-        .catch(error => {
-            // Handle Errors here.
-            // const errorCode = error.code;
-            // const errorMessage = error.message;
-            // The email of the user's account used.
-            // const email = error.customData.email;
-            throw error;
-        });
+export const signInWithGoogle = async () => {
+    try {
+        const googleAuthProvider: GoogleAuthProvider = new GoogleAuthProvider();
+        // todo: lookup type of signInWithPopup response
+        const firebaseUserCredential = signInWithPopup(
+            auth,
+            googleAuthProvider
+        ) as unknown as UserCredential;
+        return firebaseUserCredential.user;
+    } catch (error: unknown) {
+        console.log(error);
+        throw error;
+    }
 };
 
-export const signOut = () => {
-    auth.signOut().then(() => {
-        console.log('Signed out');
-    });
+export const signOut = async () => {
+    try {
+        auth.signOut();
+        return true;
+    } catch (error: unknown) {
+        console.log(error);
+        throw error;
+    }
 };
-
-// const useUserState = () => {
-//     const [user, setUser] = useState(null);
-//     useEffect(() => onAuthStateChanged(auth, (response: any) => setUser(response)), []);
-//     return user;
-// };
