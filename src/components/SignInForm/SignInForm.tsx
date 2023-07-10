@@ -2,7 +2,7 @@ import { Alert, Box, Button, TextField } from '@mui/material';
 import styles from './style';
 import { useFormik } from 'formik';
 import { useContext } from 'react';
-import AuthContext from '@context/AuthaContext';
+import AuthContext from '@context/AuthContext';
 import { loginSchema } from './validation';
 
 const SignInForm = () => {
