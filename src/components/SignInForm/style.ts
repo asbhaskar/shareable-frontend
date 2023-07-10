@@ -60,6 +60,10 @@ const styles = {
             backgroundColor: '#C2D1FF',
         },
     },
+    form__error: {
+        marginTop: '20px',
+        width: '280px',
+    },
 };
 
 export default styles;

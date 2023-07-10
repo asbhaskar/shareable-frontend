@@ -38,15 +38,9 @@ export const signUp = async (userEmailCredentials: UserEmailCredentials) => {
 
 export const signIn = async ({ email, password }: UserEmailCredentials) => {
     try {
-        const firebaseUserCredential: UserCredential = await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
-        console.log(firebaseUserCredential);
-        return firebaseUserCredential;
+        return signInWithEmailAndPassword(auth, email, password);
     } catch (error: unknown) {
-        console.log(error);
+        console.log('API ERROR -> ', typeof error, error);
         throw error;
     }
 };
