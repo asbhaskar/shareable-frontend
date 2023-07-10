@@ -5,7 +5,6 @@ import { signIn as signInAction, signOut as signOutAction } from '../actions/use
 import { useNavigate } from 'react-router';
 
 interface AuthContextInterface {
-    isLoading: boolean;
     signInError: string;
     uid: string;
     resetSignInError: () => void;
@@ -20,7 +19,6 @@ const AuthContext = createContext<AuthContextInterface>({} as AuthContextInterfa
 
 export const AuthProvider = ({ children }: any) => {
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [signInError, setSignInError] = useState<string>('');
     const [uid, setUid] = useState<string>('');
 
@@ -36,7 +34,6 @@ export const AuthProvider = ({ children }: any) => {
     };
 
     const signIn = async (email: string, password: string) => {
-        setIsLoading(true);
         console.log('signing user in');
         try {
             await signInAction({ email, password });
@@ -47,8 +44,6 @@ export const AuthProvider = ({ children }: any) => {
             setSignInError(error.message);
             console.log('caught thrown error, throwing again -> ', error?.message);
             throw error;
-        } finally {
-            setIsLoading(false);
         }
     };
 
@@ -63,7 +58,6 @@ export const AuthProvider = ({ children }: any) => {
     return (
         <AuthContext.Provider
             value={{
-                isLoading,
                 signInError,
                 uid,
                 resetSignInError,
