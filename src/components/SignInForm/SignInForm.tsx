@@ -3,7 +3,7 @@ import styles from './style';
 import { useFormik } from 'formik';
 import { useContext } from 'react';
 import AuthContext from '@context/AuthContext';
-import { loginSchema } from './validation'
+import { loginSchema } from './validation';
 
 const SignInForm = () => {
     const { signIn, resetSignInError, signInError } = useContext(AuthContext);
@@ -14,7 +14,7 @@ const SignInForm = () => {
         isSubmitting,
         errors,
         values: { email, password },
-    } = useFormik<{ email: string, password: string }>({
+    } = useFormik<{ email: string; password: string }>({
         initialValues: {
             email: '',
             password: '',
@@ -22,15 +22,10 @@ const SignInForm = () => {
         validationSchema: loginSchema,
         validateOnBlur: false,
         validateOnChange: false,
-        onSubmit: async ({ email, password }) => {
-            try {
-                resetSignInError();
-                signIn(email, password);
-                console.log('signinerror', signInError);
-            } catch (error) {
-                console.log('form caught the error -> ', typeof signInError);
-                throw error;
-            }
+        onSubmit: async ({ email, password }, { setSubmitting }) => {
+            resetSignInError();
+            await signIn(email, password);
+            setSubmitting(false);
         },
     });
     return (

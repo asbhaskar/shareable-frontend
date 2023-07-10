@@ -8,7 +8,7 @@ interface AuthContextInterface {
     signInError: string;
     uid: string;
     resetSignInError: () => void;
-    signIn: (email: string, password: string) => void;
+    signIn: (email: string, password: string) => Promise<void>;
     signOut: () => void;
 }
 
